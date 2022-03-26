@@ -1,3 +1,4 @@
+import {AuthenticationParams} from '../../../domain/usecases/authentication';
 import {HttpPostClient} from '../../protocols/http/http-post-client';
 
 export class RemoteAuthentication {
@@ -5,7 +6,10 @@ export class RemoteAuthentication {
     private readonly url: string,
     private readonly httpClient: HttpPostClient,
   ) {}
-  async auth(): Promise<void> {
-    await this.httpClient.post({url: this.url});
+  async auth(body: AuthenticationParams): Promise<void> {
+    await this.httpClient.post({
+      url: this.url,
+      body,
+    });
   }
 }
