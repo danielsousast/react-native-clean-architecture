@@ -6,5 +6,5 @@ export type AuthenticationParams = {
 };
 
 export interface Authentication {
-  auth(crendetials: AuthenticationParams): Promise<AccountModel>;
+  auth(crendetials: AuthenticationParams): Promise<AccountModel | undefined>;
 }
