@@ -8,3 +8,5 @@ export const Container = styled.TouchableOpacity`
   border-radius: 4px;
   background-color: #f16605;
 `;
+
+export const Text = styled.Text``;
