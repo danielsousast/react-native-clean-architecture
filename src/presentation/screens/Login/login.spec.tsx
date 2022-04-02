@@ -8,11 +8,12 @@ import {
   act,
   waitFor,
 } from '@testing-library/react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SutTypes {
   sut: RenderAPI;
@@ -23,10 +24,12 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
-
   validationSpy.error = 'any_error';
+
   const sut = render(
-    <Login validation={validationSpy} authentication={authenticationSpy} />,
+    <NavigationContainer>
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    </NavigationContainer>,
   );
   return {sut, validationSpy, authenticationSpy};
 };
@@ -156,7 +159,6 @@ describe('Login Screen', () => {
     fillEmail(sut);
     fillPassword(sut);
     const submit = sut.getByTestId('submit');
-    fireEvent.press(submit);
     fireEvent.press(submit);
     const loginContainer = sut.getByTestId('login-container');
     await waitFor(() => loginContainer);

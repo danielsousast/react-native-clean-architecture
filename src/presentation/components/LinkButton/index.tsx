@@ -1,9 +1,14 @@
 import React from 'react';
 import {Container, Text} from './styles';
 
-const LinkButton: React.FC = ({children}) => {
+type LinkButtonProps = {
+  testID?: string;
+  onPress: () => void;
+};
+
+const LinkButton: React.FC<LinkButtonProps> = ({testID, onPress, children}) => {
   return (
-    <Container>
+    <Container testID={testID} onPress={onPress}>
       <Text>{children}</Text>
     </Container>
   );

@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {Button} from '@/presentation/components/Button';
 import {Input} from '@/presentation/components/Input';
 import {ErrorMessage} from '@/presentation/components/ErrorMessage';
@@ -8,7 +10,6 @@ import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
 
 import {Container} from './styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LoginProps = {
   validation: Validation;
@@ -46,6 +47,8 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
     }
   }
 
+  function onRegisterPress() {}
+
   return (
     <Container testID="login-container">
       <Spinner visible={loading} />
@@ -68,7 +71,9 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
         disabled={!password || !email}
         onPress={onSubmit}
       />
-      <LinkButton>Criar conta</LinkButton>
+      <LinkButton testID="register-button" onPress={onRegisterPress}>
+        Criar conta
+      </LinkButton>
       <ErrorMessage error={error} />
     </Container>
   );
