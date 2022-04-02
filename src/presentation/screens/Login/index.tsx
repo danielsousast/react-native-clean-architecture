@@ -8,6 +8,7 @@ import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
 
 import {Container} from './styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type LoginProps = {
   validation: Validation;
@@ -37,7 +38,8 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
 
     try {
       setLoading(true);
-      await authentication.auth({email, password});
+      const account = await authentication.auth({email, password});
+      await AsyncStorage.setItem('accessToken', account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);

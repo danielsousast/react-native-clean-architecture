@@ -12,6 +12,7 @@ import {Login} from '@/presentation/screens/Login';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface SutTypes {
   sut: RenderAPI;
@@ -52,6 +53,9 @@ const simulateSubmit = (sut: RenderAPI) => {
 
 describe('Login Screen', () => {
   afterEach(cleanup);
+  beforeEach(() => {
+    AsyncStorage.clear();
+  });
   test('should start with initial state', async () => {
     const {sut} = makeSut();
     const submit = sut.getByTestId('submit');
@@ -144,5 +148,21 @@ describe('Login Screen', () => {
     await waitFor(() => errorWrapper);
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
+  });
+
+  test('should add accessToken to AsynStorage on success', async () => {
+    const {sut, validationSpy, authenticationSpy} = makeSut();
+    validationSpy.error = undefined;
+    fillEmail(sut);
+    fillPassword(sut);
+    const submit = sut.getByTestId('submit');
+    fireEvent.press(submit);
+    fireEvent.press(submit);
+    const loginContainer = sut.getByTestId('login-container');
+    await waitFor(() => loginContainer);
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+      'accessToken',
+      authenticationSpy.account.accessToken,
+    );
   });
 });
