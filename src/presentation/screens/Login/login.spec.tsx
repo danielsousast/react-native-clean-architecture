@@ -15,10 +15,12 @@ interface SutTypes {
 
 class ValidationSpy implements Validation {
   error: string | undefined;
-  input: object | undefined;
+  fieldname: string | undefined;
+  fieldvalue: string | undefined;
 
-  validate(input: object): string | undefined {
-    this.input = input;
+  validate(fieldname: string, fieldvalue: string): string | undefined {
+    this.fieldname = fieldname;
+    this.fieldvalue = fieldvalue;
     return this.error;
   }
 }
@@ -46,13 +48,15 @@ describe('Login Screen', () => {
     const {sut, validationSpy} = makeSut();
     const emailInput = sut.getByTestId('email-input');
     fireEvent(emailInput, 'onChangeText', 'any_email');
-    expect(validationSpy.input).toEqual({email: 'any_email'});
+    expect(validationSpy.fieldname).toEqual('email');
+    expect(validationSpy.fieldvalue).toEqual('any_email');
   });
 
   test('should call Validation with correct password', () => {
     const {sut, validationSpy} = makeSut();
     const passwordInput = sut.getByTestId('password-input');
     fireEvent(passwordInput, 'onChangeText', 'any_password');
-    expect(validationSpy.input).toEqual({password: 'any_password'});
+    expect(validationSpy.fieldname).toEqual('password');
+    expect(validationSpy.fieldvalue).toEqual('any_password');
   });
 });

@@ -23,13 +23,13 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
 
   React.useEffect(() => {
     if (email) {
-      validation.validate({email});
+      validation.validate('email', email);
     }
   }, [email, validation]);
 
   React.useEffect(() => {
     if (password) {
-      validation.validate({password});
+      validation.validate('password', password);
     }
   }, [password, validation]);
 
