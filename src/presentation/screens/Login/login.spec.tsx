@@ -5,10 +5,13 @@ import {
   RenderAPI,
   fireEvent,
   cleanup,
+  act,
+  waitFor,
 } from '@testing-library/react-native';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
+import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 
 interface SutTypes {
   sut: RenderAPI;
@@ -41,8 +44,10 @@ const fillPassword = (
 };
 
 const simulateSubmit = (sut: RenderAPI) => {
-  const submit = sut.getByTestId('submit');
-  fireEvent.press(submit);
+  act(() => {
+    const submit = sut.getByTestId('submit');
+    fireEvent.press(submit);
+  });
 };
 
 describe('Login Screen', () => {
@@ -122,5 +127,22 @@ describe('Login Screen', () => {
     fireEvent.press(submit);
     fireEvent.press(submit);
     expect(authenticationSpy.callsCount).toEqual(1);
+  });
+
+  test('should present error if authentication fails', async () => {
+    const {sut, validationSpy, authenticationSpy} = makeSut();
+    validationSpy.error = undefined;
+    fillEmail(sut);
+    fillPassword(sut);
+
+    const error = new InvalidCredentialsError();
+    jest
+      .spyOn(authenticationSpy, 'auth')
+      .mockReturnValue(Promise.reject(error));
+    simulateSubmit(sut);
+    const errorWrapper = sut.getByTestId('error-wrapper');
+    await waitFor(() => errorWrapper);
+    const errorMessage = sut.getByTestId('error-message');
+    expect(errorMessage.children[0]).toEqual(error.message);
   });
 });

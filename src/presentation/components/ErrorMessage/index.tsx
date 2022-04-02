@@ -3,14 +3,13 @@ import {Container, Message} from './styles';
 
 interface ErrorMessageProps {
   error?: string;
-  testID?: string;
 }
 
-export const ErrorMessage: React.FC<ErrorMessageProps> = ({error, testID}) => {
+export const ErrorMessage: React.FC<ErrorMessageProps> = ({error}) => {
   function renderError() {
     if (error) {
-      return <Message testID={testID}>{error}</Message>;
+      return <Message testID="error-message">{error}</Message>;
     }
   }
-  return <Container>{renderError()}</Container>;
+  return <Container testID="error-wrapper">{renderError()}</Container>;
 };
