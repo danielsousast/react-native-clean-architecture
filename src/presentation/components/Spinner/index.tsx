@@ -4,8 +4,8 @@ import {Container} from './styles';
 
 const Spinner: React.FC = () => {
   return (
-    <Container>
-      <ActivityIndicator testID="spinner" size="large" />
+    <Container testID="spinner">
+      <ActivityIndicator size="large" />
     </Container>
   );
 };

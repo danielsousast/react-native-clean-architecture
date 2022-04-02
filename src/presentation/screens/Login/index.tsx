@@ -6,16 +6,18 @@ import {ErrorMessage} from '@/presentation/components/ErrorMessage';
 import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
+import {Authentication} from '@/domain/usecases/authentication';
 
 type LoginProps = {
   validation: Validation;
+  authentication: Authentication;
 };
 
-export const Login: React.FC<LoginProps> = ({validation}) => {
+export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading] = React.useState(false);
-  const [error, setError] = React.useState<string | undefined>('');
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | undefined>();
 
   function renderSpinner() {
     return loading && <Spinner />;
@@ -33,6 +35,11 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
     }
   }, [password, validation]);
 
+  async function onSubmit() {
+    setLoading(true);
+    await authentication.auth({email, password});
+  }
+
   return (
     <Container>
       {renderSpinner()}
@@ -49,7 +56,12 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
         placeholder="Senha"
         testID="password-input"
       />
-      <Button testID="submit" marginTop={16} disabled={!password || !email} />
+      <Button
+        testID="submit"
+        marginTop={16}
+        disabled={!password || !email}
+        onPress={onSubmit}
+      />
       <LinkButton>Criar conta</LinkButton>
       <ErrorMessage error={error} testID="error-message" />
     </Container>

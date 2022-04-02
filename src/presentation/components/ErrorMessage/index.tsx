@@ -9,8 +9,8 @@ interface ErrorMessageProps {
 export const ErrorMessage: React.FC<ErrorMessageProps> = ({error, testID}) => {
   function renderError() {
     if (error) {
-      return <Message>{error}</Message>;
+      return <Message testID={testID}>{error}</Message>;
     }
   }
-  return <Container testID={testID}>{renderError()}</Container>;
+  return <Container>{renderError()}</Container>;
 };

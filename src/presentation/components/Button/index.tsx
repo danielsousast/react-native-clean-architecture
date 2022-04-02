@@ -5,6 +5,7 @@ interface ButtonProps {
   marginTop?: number;
   testID?: string;
   disabled?: boolean;
+  onPress: () => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
