@@ -2,15 +2,15 @@ import React from 'react';
 import {Container, Message} from './styles';
 
 interface ErrorMessageProps {
-  error: string;
-  testId?: string;
+  error?: string;
+  testID?: string;
 }
 
-export const ErrorMessage: React.FC<ErrorMessageProps> = ({error, testId}) => {
+export const ErrorMessage: React.FC<ErrorMessageProps> = ({error, testID}) => {
   function renderError() {
     if (error) {
-      return <Message testID={testId}>{error}</Message>;
+      return <Message>{error}</Message>;
     }
   }
-  return <Container>{renderError()}</Container>;
+  return <Container testID={testID}>{renderError()}</Container>;
 };

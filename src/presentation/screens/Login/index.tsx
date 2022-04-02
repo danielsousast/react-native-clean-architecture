@@ -15,7 +15,7 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading] = React.useState(false);
-  const [error] = React.useState('');
+  const [error, setError] = React.useState<string | undefined>('');
 
   function renderSpinner() {
     return loading && <Spinner />;
@@ -23,13 +23,13 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
 
   React.useEffect(() => {
     if (email) {
-      validation.validate('email', email);
+      setError(validation.validate('email', email));
     }
   }, [email, validation]);
 
   React.useEffect(() => {
     if (password) {
-      validation.validate('password', password);
+      setError(validation.validate('password', password));
     }
   }, [password, validation]);
 
@@ -51,7 +51,7 @@ export const Login: React.FC<LoginProps> = ({validation}) => {
       />
       <Button testID="submit" marginTop={16} disabled={!password || !email} />
       <LinkButton>Criar conta</LinkButton>
-      <ErrorMessage error={error} />
+      <ErrorMessage error={error} testID="error-message" />
     </Container>
   );
 };
