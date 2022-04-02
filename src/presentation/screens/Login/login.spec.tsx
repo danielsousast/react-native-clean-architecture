@@ -8,22 +8,7 @@ import {
 } from '@testing-library/react-native';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
-import {
-  Authentication,
-  AuthenticationParams,
-} from '@/domain/usecases/authentication';
-import {AccountModel} from '@/domain/models/account-model';
-import {mockAccountModel} from '@/domain/test/mock-account';
-
-class AuthenticationSpy implements Authentication {
-  account = mockAccountModel();
-  params: AuthenticationParams | undefined;
-
-  auth(crendetials: AuthenticationParams): Promise<AccountModel | undefined> {
-    this.params = crendetials;
-    return Promise.resolve(this.account);
-  }
-}
+import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 
 interface SutTypes {
   sut: RenderAPI;
@@ -53,6 +38,11 @@ const fillPassword = (
 ) => {
   const passwordInput = sut.getByTestId('password-input');
   fireEvent(passwordInput, 'onChangeText', password);
+};
+
+const simulateSubmit = (sut: RenderAPI) => {
+  const submit = sut.getByTestId('submit');
+  fireEvent.press(submit);
 };
 
 describe('Login Screen', () => {
@@ -104,8 +94,7 @@ describe('Login Screen', () => {
     validationSpy.error = undefined;
     fillEmail(sut);
     fillPassword(sut);
-    const submit = sut.getByTestId('submit');
-    fireEvent.press(submit);
+    simulateSubmit(sut);
     const spinner = sut.getByTestId('spinner');
     expect(spinner).toBeTruthy();
   });
@@ -117,11 +106,21 @@ describe('Login Screen', () => {
     const password = faker.internet.password();
     fillEmail(sut, email);
     fillPassword(sut, password);
-    const submit = sut.getByTestId('submit');
-    fireEvent.press(submit);
+    simulateSubmit(sut);
     expect(authenticationSpy.params).toEqual({
       email,
       password,
     });
+  });
+
+  test('should call authentication only once', async () => {
+    const {sut, validationSpy, authenticationSpy} = makeSut();
+    validationSpy.error = undefined;
+    fillEmail(sut);
+    fillPassword(sut);
+    const submit = sut.getByTestId('submit');
+    fireEvent.press(submit);
+    fireEvent.press(submit);
+    expect(authenticationSpy.callsCount).toEqual(1);
   });
 });

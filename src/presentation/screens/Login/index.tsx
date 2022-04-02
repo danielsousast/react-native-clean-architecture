@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {Button} from '@/presentation/components/Button';
 import {Input} from '@/presentation/components/Input';
-import {Container} from './styles';
 import {ErrorMessage} from '@/presentation/components/ErrorMessage';
 import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
+
+import {Container} from './styles';
 
 type LoginProps = {
   validation: Validation;
@@ -36,6 +37,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
   }, [password, validation]);
 
   async function onSubmit() {
+    if (loading) return;
     setLoading(true);
     await authentication.auth({email, password});
   }
