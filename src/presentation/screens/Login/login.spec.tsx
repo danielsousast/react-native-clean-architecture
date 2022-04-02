@@ -6,23 +6,11 @@ import {
   cleanup,
 } from '@testing-library/react-native';
 import {Login} from '.';
-import {Validation} from '@/presentation/protocols/validation';
+import {ValidationSpy} from '@/presentation/test/mock-validation';
 
 interface SutTypes {
   sut: RenderAPI;
   validationSpy: ValidationSpy;
-}
-
-class ValidationSpy implements Validation {
-  error: string | undefined;
-  fieldname: string | undefined;
-  fieldvalue: string | undefined;
-
-  validate(fieldname: string, fieldvalue: string): string | undefined {
-    this.fieldname = fieldname;
-    this.fieldvalue = fieldvalue;
-    return this.error;
-  }
 }
 
 const makeSut = (): SutTypes => {
