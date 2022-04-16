@@ -8,13 +8,13 @@ const makeSut = (): MinLengthValidation =>
 describe('MinLengthValidation', () => {
   test('should retrun error if value length is invalid', () => {
     const sut = makeSut();
-    const error = sut.validate('123');
+    const error = sut.validate(faker.random.alphaNumeric(4));
     expect(error).toEqual(new InvalidFieldError());
   });
 
   test('should retrun falsy if value length is invalid', () => {
     const sut = makeSut();
-    const error = sut.validate('12345');
+    const error = sut.validate(faker.random.alphaNumeric(5));
     expect(error).toBeFalsy();
   });
 });
