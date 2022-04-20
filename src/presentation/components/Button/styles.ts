@@ -10,4 +10,7 @@ export const Container = styled(TouchableOpacity)`
   background-color: #f16605;
 `;
 
-export const Text = styled.Text``;
+export const Text = styled.Text`
+  color: #fff;
+  font-weight: bold;
+`;

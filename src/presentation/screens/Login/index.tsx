@@ -23,14 +23,15 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
   const [error, setError] = React.useState<string | undefined>();
 
   React.useEffect(() => {
+    console.log(validation);
     if (email) {
-      setError(validation.validate('email', email));
+      setError(validation?.validate('email', email));
     }
   }, [email, validation]);
 
   React.useEffect(() => {
     if (password) {
-      setError(validation.validate('password', password));
+      setError(validation?.validate('password', password));
     }
   }, [password, validation]);
 
@@ -39,7 +40,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
 
     try {
       setLoading(true);
-      const account = await authentication.auth({email, password});
+      const account = await authentication?.auth({email, password});
       await AsyncStorage.setItem('accessToken', account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);

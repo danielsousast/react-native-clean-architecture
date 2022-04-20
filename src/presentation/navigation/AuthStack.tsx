@@ -1,13 +1,19 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Login} from '@/presentation/screens/Login';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
-export const AuthStack = () => {
+type AuthStackProps = {
+  makeLogin: React.FC;
+};
+
+export const AuthStack: React.FC<AuthStackProps> = ({makeLogin}) => {
   return (
-    <Navigator>
-      <Screen name="Login" component={Login} />
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Screen name="Login" component={makeLogin} />
     </Navigator>
   );
 };
