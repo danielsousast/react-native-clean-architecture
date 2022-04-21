@@ -1,4 +1,4 @@
-import {RemoteAuthentication} from '@/data/usecases/authentication/remote-authentication';
+import {RemoteAuthentication} from '@/data/usecases';
 import {makeAxiosHttpClient} from '@/main/factories/http/axios-http-client-factory';
 
 export const makeRemoteAuthentication = (): RemoteAuthentication => {
