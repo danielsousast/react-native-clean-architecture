@@ -170,4 +170,19 @@ describe('Login Screen', () => {
       authenticationSpy.account.accessToken,
     );
   });
+
+  test('should present error if SaveAccessToken fails', async () => {
+    const {sut, saveAccessTokenMock} = makeSut();
+    fillEmail(sut);
+    fillPassword(sut);
+    const error = new Error('Any Error');
+    jest
+      .spyOn(saveAccessTokenMock, 'save')
+      .mockReturnValue(Promise.reject(error));
+    simulateSubmit(sut);
+    const errorWrapper = sut.getByTestId('error-wrapper');
+    await waitFor(() => errorWrapper);
+    const errorMessage = sut.getByTestId('error-message');
+    expect(errorMessage.children[0]).toEqual(error.message);
+  });
 });
