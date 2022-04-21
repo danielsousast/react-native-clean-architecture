@@ -1,5 +1,4 @@
 import React from 'react';
-import faker from '@faker-js/faker';
 import {render, RenderAPI, cleanup} from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
@@ -7,8 +6,10 @@ import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {Register} from '@/presentation/screens/Register';
 import {
   fillIpunt,
+  simulateSubmit,
   testButtonIsDisabled,
   testButtonIsEnabled,
+  testIfIsLoading,
   testInputIsEmpty,
 } from '@/presentation/test/form-helper';
 
@@ -45,18 +46,28 @@ describe('Login Screen', () => {
   test('should present error if register form is invalid', async () => {
     const {sut, validationStub} = makeSut();
     validationStub.error = 'Any Error';
-    const password = faker.internet.password();
-    fillIpunt(sut, 'password-input', password);
+    fillIpunt(sut, 'password-input');
     const errorStatus = sut.getByTestId('error-message');
     expect(errorStatus.children).toHaveLength(1);
   });
 
   test('should enable button if register form is valid', async () => {
     const {sut} = makeSut();
-    fillIpunt(sut, 'password-input', faker.random.word());
-    fillIpunt(sut, 'email-input', faker.random.word());
-    fillIpunt(sut, 'name-input', faker.random.word());
-    fillIpunt(sut, 'confirm-password-input', faker.random.word());
+    fillIpunt(sut, 'password-input');
+    fillIpunt(sut, 'email-input');
+    fillIpunt(sut, 'name-input');
+    fillIpunt(sut, 'confirm-password-input');
     testButtonIsEnabled(sut, 'submit');
+  });
+
+  test('should render register loading if form is submited', async () => {
+    const {sut, validationStub} = makeSut();
+    validationStub.error = undefined;
+    fillIpunt(sut, 'password-input');
+    fillIpunt(sut, 'email-input');
+    fillIpunt(sut, 'name-input');
+    fillIpunt(sut, 'confirm-password-input');
+    simulateSubmit(sut);
+    testIfIsLoading(sut);
   });
 });

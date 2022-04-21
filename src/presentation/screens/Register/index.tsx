@@ -48,10 +48,6 @@ export const Register: React.FC<RegisterProps> = ({validation}) => {
   }, [confirmPassword, validation]);
 
   async function onSubmit() {
-    if (loading) {
-      return;
-    }
-
     try {
       setLoading(true);
     } catch (e) {
