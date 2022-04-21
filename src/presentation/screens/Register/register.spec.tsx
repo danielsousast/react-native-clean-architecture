@@ -1,7 +1,7 @@
 import React from 'react';
 import {render, RenderAPI, cleanup} from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {ValidationSpy} from '@/presentation/test/mock-validation';
+import {ValidationStub} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {Register} from '@/presentation/screens/Register';
 import {
@@ -12,15 +12,16 @@ import {
   testIfIsLoading,
   testInputIsEmpty,
 } from '@/presentation/test/form-helper';
+import faker from '@faker-js/faker';
 
 interface SutTypes {
   sut: RenderAPI;
-  validationStub: ValidationSpy;
+  validationStub: ValidationStub;
   registrationSpy: AuthenticationSpy;
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = new ValidationSpy();
+  const validationStub = new ValidationStub();
   const registrationSpy = new AuthenticationSpy();
   validationStub.error = 'any_error';
 
@@ -45,7 +46,7 @@ describe('Login Screen', () => {
 
   test('should present error if register form is invalid', async () => {
     const {sut, validationStub} = makeSut();
-    validationStub.error = 'Any Error';
+    validationStub.error = faker.random.words();
     fillIpunt(sut, 'password-input');
     const errorStatus = sut.getByTestId('error-message');
     expect(errorStatus.children).toHaveLength(1);
