@@ -24,6 +24,12 @@ export const Register: React.FC<RegisterProps> = ({validation}) => {
   const [error, setError] = React.useState<string | undefined>();
 
   React.useEffect(() => {
+    if (name) {
+      setError(validation?.validate('name', name));
+    }
+  }, [name, validation]);
+
+  React.useEffect(() => {
     if (email) {
       setError(validation?.validate('email', email));
     }
@@ -34,6 +40,12 @@ export const Register: React.FC<RegisterProps> = ({validation}) => {
       setError(validation?.validate('password', password));
     }
   }, [password, validation]);
+
+  React.useEffect(() => {
+    if (confirmPassword) {
+      setError(validation?.validate('confirm-password', confirmPassword));
+    }
+  }, [confirmPassword, validation]);
 
   async function onSubmit() {
     if (loading) {

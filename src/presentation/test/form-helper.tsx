@@ -12,6 +12,11 @@ export const fillIpunt = (sut: RenderAPI, testID: string, value: string) => {
   fireEvent(input, 'onChangeText', value);
 };
 
+export const testButtonIsEnabled = (sut: RenderAPI, testID: string) => {
+  const submit = sut.getByTestId(testID);
+  expect(submit.props.accessibilityState.disabled).toBeFalsy();
+};
+
 export const testButtonIsDisabled = (sut: RenderAPI, testID: string) => {
   const submit = sut.getByTestId(testID);
   expect(submit.props.accessibilityState.disabled).toBeTruthy();

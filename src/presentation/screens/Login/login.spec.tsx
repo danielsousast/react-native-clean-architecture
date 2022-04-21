@@ -14,7 +14,10 @@ import {ValidationSpy} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
-import {FormHelper} from '@/presentation/test';
+import {
+  testButtonIsDisabled,
+  testInputIsEmpty,
+} from '@/presentation/test/form-helper';
 interface SutTypes {
   sut: RenderAPI;
   validationSpy: ValidationSpy;
@@ -64,9 +67,9 @@ describe('Login Screen', () => {
   afterEach(cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
-    FormHelper.testButtonIsDisabled(sut, 'submit');
-    FormHelper.testInputIsEmpty(sut, 'email-input');
-    FormHelper.testInputIsEmpty(sut, 'password-input');
+    testButtonIsDisabled(sut, 'submit');
+    testInputIsEmpty(sut, 'email-input');
+    testInputIsEmpty(sut, 'password-input');
   });
 
   test('should call Validation with correct email', async () => {
