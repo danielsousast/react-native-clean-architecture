@@ -39,7 +39,9 @@ export const Login: React.FC<LoginProps> = ({
   }, [password, validation]);
 
   async function onSubmit() {
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     try {
       setLoading(true);
