@@ -1,4 +1,4 @@
-import {SetStorageMock} from '@/data/test/mock-storage';
+import {SetStorageMock} from '@/data/test/mock-cache';
 import faker from '@faker-js/faker';
 import {LocalSaveAccessToken} from './local-save-access-token';
 

@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
 import {mockAccountModel, mockAuthentication} from '@/domain/test/mock-account';
-import {HttpPostClientSpy} from '@/data/test/mock-http-client';
+import {HttpPostClientSpy} from '@/data/test/mock-http';
 import {RemoteAuthentication} from '@/data/usecases/authentication/remote-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 import {HttpStatusCode} from '@/data/protocols/http/http-response';
