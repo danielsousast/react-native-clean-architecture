@@ -23,7 +23,6 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
   const [error, setError] = React.useState<string | undefined>();
 
   React.useEffect(() => {
-    console.log(validation);
     if (email) {
       setError(validation?.validate('email', email));
     }
