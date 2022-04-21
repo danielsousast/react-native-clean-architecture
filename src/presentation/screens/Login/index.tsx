@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {Button} from '@/presentation/components/Button';
 import {Input} from '@/presentation/components/Input';
@@ -8,15 +7,20 @@ import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
-
 import {Container} from './styles';
+import {SaveAccessToken} from '@/domain/usecases/save-access-token';
 
 type LoginProps = {
   validation: Validation;
   authentication: Authentication;
+  saveAccessToken: SaveAccessToken;
 };
 
-export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
+export const Login: React.FC<LoginProps> = ({
+  validation,
+  authentication,
+  saveAccessToken,
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = React.useState(false);
@@ -40,7 +44,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
     try {
       setLoading(true);
       const account = await authentication?.auth({email, password});
-      await AsyncStorage.setItem('accessToken', account?.accessToken as string);
+      await saveAccessToken.save(account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);

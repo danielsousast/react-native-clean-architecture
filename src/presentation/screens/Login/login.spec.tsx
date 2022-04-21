@@ -9,29 +9,35 @@ import {
   waitFor,
 } from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationSpy} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
+import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
 
 interface SutTypes {
   sut: RenderAPI;
   validationSpy: ValidationSpy;
   authenticationSpy: AuthenticationSpy;
+  saveAccessTokenMock: SaveAccessTokenMock;
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy();
   const authenticationSpy = new AuthenticationSpy();
+  const saveAccessTokenMock = new SaveAccessTokenMock();
   validationSpy.error = 'any_error';
 
   const sut = render(
     <NavigationContainer>
-      <Login validation={validationSpy} authentication={authenticationSpy} />
+      <Login
+        validation={validationSpy}
+        authentication={authenticationSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
     </NavigationContainer>,
   );
-  return {sut, validationSpy, authenticationSpy};
+  return {sut, validationSpy, authenticationSpy, saveAccessTokenMock};
 };
 
 const fillEmail = (sut: RenderAPI, email: string = faker.internet.email()) => {
@@ -56,9 +62,6 @@ const simulateSubmit = (sut: RenderAPI) => {
 
 describe('Login Screen', () => {
   afterEach(cleanup);
-  beforeEach(() => {
-    AsyncStorage.clear();
-  });
   test('should start with initial state', async () => {
     const {sut} = makeSut();
     const submit = sut.getByTestId('submit');
@@ -153,8 +156,9 @@ describe('Login Screen', () => {
     expect(errorMessage.children[0]).toEqual(error.message);
   });
 
-  test('should add accessToken to AsynStorage on success', async () => {
-    const {sut, validationSpy, authenticationSpy} = makeSut();
+  test('should call SaveAccessToken on success', async () => {
+    const {sut, validationSpy, authenticationSpy, saveAccessTokenMock} =
+      makeSut();
     validationSpy.error = undefined;
     fillEmail(sut);
     fillPassword(sut);
@@ -162,8 +166,7 @@ describe('Login Screen', () => {
     fireEvent.press(submit);
     const loginContainer = sut.getByTestId('login-container');
     await waitFor(() => loginContainer);
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-      'accessToken',
+    expect(saveAccessTokenMock.accessToken).toBe(
       authenticationSpy.account.accessToken,
     );
   });
