@@ -1,5 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Register} from '../screens/Register';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export const AuthStack: React.FC<AuthStackProps> = ({makeLogin}) => {
         headerShown: false,
       }}>
       <Screen name="Login" component={makeLogin} />
+      <Screen name="Register" component={Register} />
     </Navigator>
   );
 };

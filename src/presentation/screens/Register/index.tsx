@@ -6,25 +6,20 @@ import {ErrorMessage} from '@/presentation/components/ErrorMessage';
 import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
-import {Authentication} from '@/domain/usecases/authentication';
 import {Container} from './styles';
-import {SaveAccessToken} from '@/domain/usecases/save-access-token';
 import {useNavigation} from '@react-navigation/native';
 
-type LoginProps = {
+type RegisterProps = {
   validation: Validation;
-  authentication: Authentication;
-  saveAccessToken: SaveAccessToken;
 };
 
-export const Login: React.FC<LoginProps> = ({
-  validation,
-  authentication,
-  saveAccessToken,
-}) => {
+export const Register: React.FC<RegisterProps> = ({validation}) => {
   const navigation = useNavigation();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
 
@@ -47,15 +42,13 @@ export const Login: React.FC<LoginProps> = ({
 
     try {
       setLoading(true);
-      const account = await authentication.auth({email, password});
-      await saveAccessToken.save(account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);
     }
   }
 
-  function onLinkBurttonPress() {
+  function onLinkPress() {
     navigation.navigate('Register' as any);
   }
 
@@ -63,26 +56,43 @@ export const Login: React.FC<LoginProps> = ({
     <Container testID="login-container">
       <Spinner visible={loading} />
       <Input
+        value={name}
+        onChangeText={setName}
+        placeholder="Nome"
+        marginBottom={16}
+        testID="name-input"
+      />
+      <Input
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
         marginBottom={16}
         testID="email-input"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       <Input
         value={password}
         onChangeText={setPassword}
         placeholder="Senha"
         testID="password-input"
+        marginBottom={16}
+      />
+      <Input
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        placeholder="Confirmar senha"
+        testID="confirm-password-input"
       />
       <Button
         testID="submit"
         marginTop={16}
-        disabled={!password || !email}
+        disabled={!password || !email || !name || !confirmPassword}
         onPress={onSubmit}
       />
-      <LinkButton testID="register-button" onPress={onLinkBurttonPress}>
-        Criar conta
+      <LinkButton testID="register-button" onPress={onLinkPress}>
+        Fazer login
       </LinkButton>
       <ErrorMessage error={error} />
     </Container>
