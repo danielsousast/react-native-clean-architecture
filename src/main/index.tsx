@@ -1,3 +1,6 @@
+if (__DEV__) {
+  import('../config/ReactotronConfig');
+}
 import React, {Fragment} from 'react';
 import {StatusBar} from 'react-native';
 import {Navigator} from '@/presentation/navigation';

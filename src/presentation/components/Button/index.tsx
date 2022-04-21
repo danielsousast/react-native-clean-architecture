@@ -12,9 +12,14 @@ export const Button: React.FC<ButtonProps> = ({
   marginTop,
   disabled,
   testID,
+  onPress,
 }) => {
   return (
-    <Container style={{marginTop}} testID={testID} disabled={disabled}>
+    <Container
+      style={{marginTop}}
+      testID={testID}
+      disabled={disabled}
+      onPress={onPress}>
       <Text>Entrar</Text>
     </Container>
   );

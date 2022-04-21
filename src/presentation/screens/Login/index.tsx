@@ -43,7 +43,7 @@ export const Login: React.FC<LoginProps> = ({
 
     try {
       setLoading(true);
-      const account = await authentication?.auth({email, password});
+      const account = await authentication.auth({email, password});
       await saveAccessToken.save(account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);
