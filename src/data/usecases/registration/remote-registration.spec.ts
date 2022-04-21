@@ -1,9 +1,8 @@
 import faker from '@faker-js/faker';
 import {mockAccountModel, mockRegistration} from '@/domain/test/mock-account';
 import {HttpPostClientSpy} from '@/data/test/mock-http';
-import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 import {HttpStatusCode} from '@/data/protocols/http/http-response';
-import {UnexpectedError} from '@/domain/errors/UnexpectedError';
+import {UnexpectedError, EmailInUseError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models/account-model';
 import {RemoteRegistration} from './remote-registration';
 import {RegistrationParams} from '@/domain/usecases/registration';
@@ -33,13 +32,20 @@ describe('RemoteRegistration', () => {
     expect(httpPostClient.url).toBe(url);
   });
 
-  test('should throw InvalidCredentialsError if HttpPostClient returns 401', async () => {
+  test('should call HHttpClient with correct body', async () => {
+    const {sut, httpPostClient} = makeSut();
+    const registrationParams = mockRegistration();
+    sut.register(registrationParams);
+    expect(httpPostClient.body).toEqual(registrationParams);
+  });
+
+  test('should throw EmailInUseError if HttpPostClient returns 403', async () => {
     const {sut, httpPostClient} = makeSut();
     httpPostClient.response = {
-      statusCode: HttpStatusCode.unauthorized,
+      statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.register(mockRegistration());
-    expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    expect(promise).rejects.toThrow(new EmailInUseError());
   });
 
   test('should throw UnexpectedError if HttpPostClient returns 400', async () => {

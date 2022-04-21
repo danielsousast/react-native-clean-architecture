@@ -1,7 +1,6 @@
 import {HttpPostClient} from '@/data/protocols/http/http-post-client';
 import {HttpStatusCode} from '@/data/protocols/http/http-response';
-import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
-import {UnexpectedError} from '@/domain/errors/UnexpectedError';
+import {EmailInUseError, UnexpectedError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models/account-model';
 import {Registration, RegistrationParams} from '@/domain/usecases/registration';
 
@@ -22,8 +21,8 @@ export class RemoteRegistration implements Registration {
     switch (response.statusCode) {
       case HttpStatusCode.success:
         return response.body;
-      case HttpStatusCode.unauthorized:
-        throw new InvalidCredentialsError();
+      case HttpStatusCode.forbidden:
+        throw new EmailInUseError();
       default:
         throw new UnexpectedError();
     }
