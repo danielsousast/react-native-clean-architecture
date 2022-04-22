@@ -1,9 +1,10 @@
 import React from 'react';
+import faker from '@faker-js/faker';
 import {render, RenderAPI, cleanup} from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ValidationStub} from '@/presentation/test/mock-validation';
-import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {Register} from '@/presentation/screens/Register';
+import {RegistrationSpy} from '@/presentation/test/mock-registration';
 import {
   fillIpunt,
   simulateSubmit,
@@ -12,22 +13,21 @@ import {
   testIfIsLoading,
   testInputIsEmpty,
 } from '@/presentation/test/form-helper';
-import faker from '@faker-js/faker';
 
 interface SutTypes {
   sut: RenderAPI;
   validationStub: ValidationStub;
-  registrationSpy: AuthenticationSpy;
+  registrationSpy: RegistrationSpy;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub();
-  const registrationSpy = new AuthenticationSpy();
+  const registrationSpy = new RegistrationSpy();
   validationStub.error = 'any_error';
 
   const sut = render(
     <NavigationContainer>
-      <Register validation={validationStub} />
+      <Register validation={validationStub} registration={registrationSpy} />
     </NavigationContainer>,
   );
   return {sut, validationStub, registrationSpy};
@@ -70,5 +70,25 @@ describe('Login Screen', () => {
     fillIpunt(sut, 'confirm-password-input');
     simulateSubmit(sut);
     testIfIsLoading(sut);
+  });
+
+  test('should call registration with correct values', async () => {
+    const {sut, validationStub, registrationSpy} = makeSut();
+    validationStub.error = undefined;
+    const email = faker.internet.email();
+    const password = faker.internet.password();
+    const name = faker.random.word();
+    const passwordConfirmation = faker.internet.password();
+    fillIpunt(sut, 'email-input', email);
+    fillIpunt(sut, 'password-input', password);
+    fillIpunt(sut, 'name-input', name);
+    fillIpunt(sut, 'confirm-password-input', passwordConfirmation);
+    simulateSubmit(sut);
+    expect(registrationSpy.params).toEqual({
+      name,
+      email,
+      password,
+      passwordConfirmation,
+    });
   });
 });

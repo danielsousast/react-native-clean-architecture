@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-
+import {useNavigation} from '@react-navigation/native';
 import {Button} from '@/presentation/components/Button';
 import {Input} from '@/presentation/components/Input';
 import {ErrorMessage} from '@/presentation/components/ErrorMessage';
@@ -7,18 +7,22 @@ import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Container} from './styles';
-import {useNavigation} from '@react-navigation/native';
+import {Registration} from '@/domain/usecases/registration';
 
 type RegisterProps = {
   validation: Validation;
+  registration: Registration;
 };
 
-export const Register: React.FC<RegisterProps> = ({validation}) => {
+export const Register: React.FC<RegisterProps> = ({
+  validation,
+  registration,
+}) => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
 
@@ -41,14 +45,22 @@ export const Register: React.FC<RegisterProps> = ({validation}) => {
   }, [password, validation]);
 
   React.useEffect(() => {
-    if (confirmPassword) {
-      setError(validation?.validate('confirm-password', confirmPassword));
+    if (passwordConfirmation) {
+      setError(
+        validation?.validate('password-confirmation', passwordConfirmation),
+      );
     }
-  }, [confirmPassword, validation]);
+  }, [passwordConfirmation, validation]);
 
   async function onSubmit() {
     try {
       setLoading(true);
+      await registration.register({
+        name,
+        email,
+        password,
+        passwordConfirmation,
+      });
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);
@@ -87,15 +99,15 @@ export const Register: React.FC<RegisterProps> = ({validation}) => {
         marginBottom={16}
       />
       <Input
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        value={passwordConfirmation}
+        onChangeText={setPasswordConfirmation}
         placeholder="Confirmar senha"
         testID="confirm-password-input"
       />
       <Button
         testID="submit"
         marginTop={16}
-        disabled={!password || !email || !name || !confirmPassword}
+        disabled={!password || !email || !name || !passwordConfirmation}
         onPress={onSubmit}
       />
       <LinkButton testID="register-button" onPress={onLinkPress}>
