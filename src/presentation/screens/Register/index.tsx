@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+/* eslint-disable curly */
+import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from '@/presentation/components/Button';
 import {Input} from '@/presentation/components/Input';
@@ -29,31 +30,30 @@ export const Register: React.FC<RegisterProps> = ({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  React.useEffect(() => {
-    if (name) {
-      setError(validation?.validate('name', name));
-    }
-  }, [name, validation]);
+  const validate = useCallback(
+    (fieldname: string, fieldvalue: string) => {
+      const validationError = validation?.validate(fieldname, fieldvalue);
+      if (validationError) setError(validationError);
+    },
+    [validation],
+  );
 
-  React.useEffect(() => {
-    if (email) {
-      setError(validation?.validate('email', email));
-    }
-  }, [email, validation]);
+  useEffect(() => {
+    if (name) validate('name', name);
+  }, [name, validate, validation]);
 
-  React.useEffect(() => {
-    if (password) {
-      setError(validation?.validate('password', password));
-    }
-  }, [password, validation]);
+  useEffect(() => {
+    if (email) validate('email', email);
+  }, [email, validate, validation]);
 
-  React.useEffect(() => {
-    if (passwordConfirmation) {
-      setError(
-        validation?.validate('password-confirmation', passwordConfirmation),
-      );
-    }
-  }, [passwordConfirmation, validation]);
+  useEffect(() => {
+    if (password) validate('password', password);
+  }, [password, validate, validation]);
+
+  useEffect(() => {
+    if (passwordConfirmation)
+      validate('passwordConfirmation', passwordConfirmation);
+  }, [passwordConfirmation, validate, validation]);
 
   async function onSubmit() {
     if (loading || error) return;

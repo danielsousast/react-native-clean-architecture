@@ -11,7 +11,7 @@ export class ValidationComposite implements Validation {
   validate(fieldname: string, fieldvalue: string): string | undefined {
     const validators = this.valdiators.filter(v => v.fieldname === fieldname);
     for (const validator of validators) {
-      const error = validator.validate(fieldvalue);
+      const error = validator.validate({[fieldname]: fieldvalue});
       if (error) {
         return error.message;
       }
