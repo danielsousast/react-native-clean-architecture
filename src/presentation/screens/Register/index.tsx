@@ -53,6 +53,7 @@ export const Register: React.FC<RegisterProps> = ({
   }, [passwordConfirmation, validation]);
 
   async function onSubmit() {
+    if (loading) return;
     try {
       setLoading(true);
       await registration.register({

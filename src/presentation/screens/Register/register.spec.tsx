@@ -33,6 +33,13 @@ const makeSut = (): SutTypes => {
   return {sut, validationStub, registrationSpy};
 };
 
+const pupulateForm = (sut: RenderAPI) => {
+  fillIpunt(sut, 'email-input');
+  fillIpunt(sut, 'password-input');
+  fillIpunt(sut, 'name-input');
+  fillIpunt(sut, 'confirm-password-input');
+};
+
 describe('Login Screen', () => {
   afterEach(cleanup);
   test('should start with initial state', async () => {
@@ -90,5 +97,14 @@ describe('Login Screen', () => {
       password,
       passwordConfirmation,
     });
+  });
+
+  test('should call registration only once', async () => {
+    const {sut, validationStub, registrationSpy} = makeSut();
+    validationStub.error = undefined;
+    pupulateForm(sut);
+    simulateSubmit(sut);
+    simulateSubmit(sut);
+    expect(registrationSpy.callsCount).toEqual(1);
   });
 });

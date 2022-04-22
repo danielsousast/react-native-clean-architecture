@@ -9,6 +9,7 @@ export class RegistrationSpy implements Registration {
 
   register(params: RegistrationParams): Promise<AccountModel | undefined> {
     this.params = params;
+    this.callsCount++;
     return Promise.resolve(this.account);
   }
 }
