@@ -1,6 +1,11 @@
 import React from 'react';
 import faker from '@faker-js/faker';
-import {render, RenderAPI, cleanup} from '@testing-library/react-native';
+import {
+  render,
+  RenderAPI,
+  cleanup,
+  waitFor,
+} from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {Register} from '@/presentation/screens/Register';
@@ -13,24 +18,31 @@ import {
   testIfIsLoading,
   testInputIsEmpty,
 } from '@/presentation/test/form-helper';
+import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
 
 interface SutTypes {
   sut: RenderAPI;
   validationStub: ValidationStub;
   registrationSpy: RegistrationSpy;
+  saveAccessTokenMock: SaveAccessTokenMock;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub();
   const registrationSpy = new RegistrationSpy();
+  const saveAccessTokenMock = new SaveAccessTokenMock();
   validationStub.error = 'any_error';
 
   const sut = render(
     <NavigationContainer>
-      <Register validation={validationStub} registration={registrationSpy} />
+      <Register
+        validation={validationStub}
+        registration={registrationSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
     </NavigationContainer>,
   );
-  return {sut, validationStub, registrationSpy};
+  return {sut, validationStub, registrationSpy, saveAccessTokenMock};
 };
 
 const pupulateForm = (sut: RenderAPI) => {
@@ -106,5 +118,55 @@ describe('Login Screen', () => {
     simulateSubmit(sut);
     simulateSubmit(sut);
     expect(registrationSpy.callsCount).toEqual(1);
+  });
+
+  test('should present error if registration fails', async () => {
+    const {sut, validationStub, registrationSpy} = makeSut();
+    validationStub.error = undefined;
+    pupulateForm(sut);
+    const error = new Error('any_error');
+    jest
+      .spyOn(registrationSpy, 'register')
+      .mockReturnValue(Promise.reject(error));
+    simulateSubmit(sut);
+    const errorWrapper = sut.getByTestId('error-wrapper');
+    await waitFor(() => errorWrapper);
+    const errorMessage = sut.getByTestId('error-message');
+    expect(errorMessage.children[0]).toEqual(error.message);
+  });
+
+  test('should not call registration if form is invalid', async () => {
+    const {sut, validationStub, registrationSpy} = makeSut();
+    validationStub.error = faker.random.words();
+    pupulateForm(sut);
+    simulateSubmit(sut);
+    expect(registrationSpy.callsCount).toEqual(0);
+  });
+
+  test('should call SaveAccessToken on success', async () => {
+    const {sut, validationStub, registrationSpy, saveAccessTokenMock} =
+      makeSut();
+    validationStub.error = undefined;
+    pupulateForm(sut);
+    simulateSubmit(sut);
+    const loginContainer = sut.getByTestId('login-container');
+    await waitFor(() => loginContainer);
+    expect(saveAccessTokenMock.accessToken).toBe(
+      registrationSpy.account.accessToken,
+    );
+  });
+
+  test('should present error if SaveAccessToken fails', async () => {
+    const {sut, saveAccessTokenMock} = makeSut();
+    pupulateForm(sut);
+    const error = new Error('any_error');
+    jest
+      .spyOn(saveAccessTokenMock, 'save')
+      .mockReturnValue(Promise.reject(error));
+    simulateSubmit(sut);
+    const errorWrapper = sut.getByTestId('error-wrapper');
+    await waitFor(() => errorWrapper);
+    const errorMessage = sut.getByTestId('error-message');
+    expect(errorMessage.children[0]).toEqual(error.message);
   });
 });

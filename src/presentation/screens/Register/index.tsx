@@ -6,17 +6,20 @@ import {ErrorMessage} from '@/presentation/components/ErrorMessage';
 import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
-import {Container} from './styles';
 import {Registration} from '@/domain/usecases/registration';
+import {SaveAccessToken} from '@/domain/usecases';
+import {Container} from './styles';
 
 type RegisterProps = {
   validation: Validation;
   registration: Registration;
+  saveAccessToken: SaveAccessToken;
 };
 
 export const Register: React.FC<RegisterProps> = ({
   validation,
   registration,
+  saveAccessToken,
 }) => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
@@ -53,15 +56,17 @@ export const Register: React.FC<RegisterProps> = ({
   }, [passwordConfirmation, validation]);
 
   async function onSubmit() {
-    if (loading) return;
+    if (loading || error) return;
     try {
       setLoading(true);
-      await registration.register({
+      const account = await registration.register({
         name,
         email,
         password,
         passwordConfirmation,
       });
+
+      await saveAccessToken.save(account?.accessToken as string);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);
