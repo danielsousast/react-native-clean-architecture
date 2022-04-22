@@ -169,4 +169,36 @@ describe('Login Screen', () => {
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
+
+  test('should call Validation with correct name', async () => {
+    const {sut, validationStub} = makeSut();
+    const name = faker.name.firstName();
+    fillIpunt(sut, 'name-input', name);
+    expect(validationStub.fieldname).toEqual('name');
+    expect(validationStub.fieldvalue).toEqual(name);
+  });
+
+  test('should call Validation with correct password', async () => {
+    const {sut, validationStub} = makeSut();
+    const password = faker.internet.password();
+    fillIpunt(sut, 'password-input', password);
+    expect(validationStub.fieldname).toEqual('password');
+    expect(validationStub.fieldvalue).toEqual(password);
+  });
+
+  test('should call Validation with correct email', async () => {
+    const {sut, validationStub} = makeSut();
+    const email = faker.internet.email();
+    fillIpunt(sut, 'email-input', email);
+    expect(validationStub.fieldname).toEqual('email');
+    expect(validationStub.fieldvalue).toEqual(email);
+  });
+
+  test('should call Validation with correct passwordConfirmation', async () => {
+    const {sut, validationStub} = makeSut();
+    const password = faker.internet.password();
+    fillIpunt(sut, 'confirm-password-input', password);
+    expect(validationStub.fieldname).toEqual('passwordConfirmation');
+    expect(validationStub.fieldvalue).toEqual(password);
+  });
 });

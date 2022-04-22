@@ -5,9 +5,9 @@ export class ValidationStub implements Validation {
   fieldname: string | undefined;
   fieldvalue: string | undefined;
 
-  validate(fieldname: string, fieldvalue: string): string | undefined {
+  validate(fieldname: string, input: any): string | undefined {
     this.fieldname = fieldname;
-    this.fieldvalue = fieldvalue;
+    this.fieldvalue = input[fieldname];
     return this.error;
   }
 }

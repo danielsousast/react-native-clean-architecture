@@ -31,7 +31,9 @@ export const Login: React.FC<LoginProps> = ({
 
   const validate = useCallback(
     (fieldname: string, fieldvalue: string) => {
-      const validationError = validation?.validate(fieldname, fieldvalue);
+      const validationError = validation?.validate(fieldname, {
+        [fieldname]: fieldvalue,
+      });
       if (validationError) setError(validationError);
     },
     [validation],

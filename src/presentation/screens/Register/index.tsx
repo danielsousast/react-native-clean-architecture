@@ -32,7 +32,9 @@ export const Register: React.FC<RegisterProps> = ({
 
   const validate = useCallback(
     (fieldname: string, fieldvalue: string) => {
-      const validationError = validation?.validate(fieldname, fieldvalue);
+      const validationError = validation?.validate(fieldname, {
+        [fieldname]: fieldvalue,
+      });
       if (validationError) setError(validationError);
     },
     [validation],
