@@ -1,27 +1,15 @@
 import React from 'react';
 import faker from '@faker-js/faker';
-import {
-  render,
-  RenderAPI,
-  fireEvent,
-  cleanup,
-  waitFor,
-} from '@testing-library/react-native';
+import * as Testing from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
-import {
-  fillIpunt,
-  simulateSubmit,
-  testButtonIsDisabled,
-  testIfIsLoading,
-  testInputIsEmpty,
-} from '@/presentation/test/form-helper';
+import * as Helper from '@/presentation/test/form-helper';
 interface SutTypes {
-  sut: RenderAPI;
+  sut: Testing.RenderAPI;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
   saveAccessTokenMock: SaveAccessTokenMock;
@@ -33,7 +21,7 @@ const makeSut = (): SutTypes => {
   const saveAccessTokenMock = new SaveAccessTokenMock();
   validationStub.error = 'any_error';
 
-  const sut = render(
+  const sut = Testing.render(
     <NavigationContainer>
       <Login
         validation={validationStub}
@@ -45,24 +33,24 @@ const makeSut = (): SutTypes => {
   return {sut, validationStub, authenticationSpy, saveAccessTokenMock};
 };
 
-const pupulateForm = (sut: RenderAPI) => {
-  fillIpunt(sut, 'email-input');
-  fillIpunt(sut, 'password-input');
+const pupulateForm = (sut: Testing.RenderAPI) => {
+  Helper.fillIpunt(sut, 'email-input');
+  Helper.fillIpunt(sut, 'password-input');
 };
 
 describe('Login Screen', () => {
-  afterEach(cleanup);
+  afterEach(Testing.cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
-    testButtonIsDisabled(sut, 'submit');
-    testInputIsEmpty(sut, 'email-input');
-    testInputIsEmpty(sut, 'password-input');
+    Helper.testButtonIsDisabled(sut, 'submit');
+    Helper.testInputIsEmpty(sut, 'email-input');
+    Helper.testInputIsEmpty(sut, 'password-input');
   });
 
   test('should call Validation with correct email', async () => {
     const {sut, validationStub} = makeSut();
     const email = faker.internet.email();
-    fillIpunt(sut, 'email-input', email);
+    Helper.fillIpunt(sut, 'email-input', email);
     expect(validationStub.fieldname).toEqual('email');
     expect(validationStub.fieldvalue).toEqual(email);
   });
@@ -70,14 +58,14 @@ describe('Login Screen', () => {
   test('should call Validation with correct password', async () => {
     const {sut, validationStub} = makeSut();
     const password = faker.internet.password();
-    fillIpunt(sut, 'password-input', password);
+    Helper.fillIpunt(sut, 'password-input', password);
     expect(validationStub.fieldname).toEqual('password');
     expect(validationStub.fieldvalue).toEqual(password);
   });
 
   test('should present error if form is invalid', async () => {
     const {sut} = makeSut();
-    fillIpunt(sut, 'password-input', faker.internet.password());
+    Helper.fillIpunt(sut, 'password-input', faker.internet.password());
     const errorStatus = sut.getByTestId('error-message');
     expect(errorStatus.children).toHaveLength(1);
   });
@@ -93,8 +81,8 @@ describe('Login Screen', () => {
     const {sut, validationStub} = makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-    simulateSubmit(sut);
-    testIfIsLoading(sut);
+    Helper.simulateSubmit(sut);
+    Helper.testIfIsLoading(sut);
   });
 
   test('should call authentication with correct values', async () => {
@@ -102,9 +90,9 @@ describe('Login Screen', () => {
     validationStub.error = undefined;
     const email = faker.internet.email();
     const password = faker.internet.password();
-    fillIpunt(sut, 'email-input', email);
-    fillIpunt(sut, 'password-input', password);
-    simulateSubmit(sut);
+    Helper.fillIpunt(sut, 'email-input', email);
+    Helper.fillIpunt(sut, 'password-input', password);
+    Helper.simulateSubmit(sut);
     expect(authenticationSpy.params).toEqual({
       email,
       password,
@@ -115,9 +103,8 @@ describe('Login Screen', () => {
     const {sut, validationStub, authenticationSpy} = makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-    const submit = sut.getByTestId('submit');
-    fireEvent.press(submit);
-    fireEvent.press(submit);
+    Helper.simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     expect(authenticationSpy.callsCount).toEqual(1);
   });
 
@@ -130,9 +117,9 @@ describe('Login Screen', () => {
     jest
       .spyOn(authenticationSpy, 'auth')
       .mockReturnValue(Promise.reject(error));
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');
-    await waitFor(() => errorWrapper);
+    await Testing.waitFor(() => errorWrapper);
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
@@ -142,10 +129,9 @@ describe('Login Screen', () => {
       makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-    const submit = sut.getByTestId('submit');
-    fireEvent.press(submit);
+    Helper.simulateSubmit(sut);
     const loginContainer = sut.getByTestId('login-container');
-    await waitFor(() => loginContainer);
+    await Testing.waitFor(() => loginContainer);
     expect(saveAccessTokenMock.accessToken).toBe(
       authenticationSpy.account.accessToken,
     );
@@ -158,9 +144,9 @@ describe('Login Screen', () => {
     jest
       .spyOn(saveAccessTokenMock, 'save')
       .mockReturnValue(Promise.reject(error));
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');
-    await waitFor(() => errorWrapper);
+    await Testing.waitFor(() => errorWrapper);
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });

@@ -1,27 +1,15 @@
 import React from 'react';
 import faker from '@faker-js/faker';
-import {
-  render,
-  RenderAPI,
-  cleanup,
-  waitFor,
-} from '@testing-library/react-native';
+import * as Testing from '@testing-library/react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {Register} from '@/presentation/screens/Register';
 import {RegistrationSpy} from '@/presentation/test/mock-registration';
-import {
-  fillIpunt,
-  simulateSubmit,
-  testButtonIsDisabled,
-  testButtonIsEnabled,
-  testIfIsLoading,
-  testInputIsEmpty,
-} from '@/presentation/test/form-helper';
+import * as Helper from '@/presentation/test/form-helper';
 import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
 
 interface SutTypes {
-  sut: RenderAPI;
+  sut: Testing.RenderAPI;
   validationStub: ValidationStub;
   registrationSpy: RegistrationSpy;
   saveAccessTokenMock: SaveAccessTokenMock;
@@ -33,7 +21,7 @@ const makeSut = (): SutTypes => {
   const saveAccessTokenMock = new SaveAccessTokenMock();
   validationStub.error = 'any_error';
 
-  const sut = render(
+  const sut = Testing.render(
     <NavigationContainer>
       <Register
         validation={validationStub}
@@ -45,50 +33,50 @@ const makeSut = (): SutTypes => {
   return {sut, validationStub, registrationSpy, saveAccessTokenMock};
 };
 
-const pupulateForm = (sut: RenderAPI) => {
-  fillIpunt(sut, 'email-input');
-  fillIpunt(sut, 'password-input');
-  fillIpunt(sut, 'name-input');
-  fillIpunt(sut, 'confirm-password-input');
+const pupulateForm = (sut: Testing.RenderAPI) => {
+  Helper.fillIpunt(sut, 'email-input');
+  Helper.fillIpunt(sut, 'password-input');
+  Helper.fillIpunt(sut, 'name-input');
+  Helper.fillIpunt(sut, 'confirm-password-input');
 };
 
 describe('Login Screen', () => {
-  afterEach(cleanup);
+  afterEach(Testing.cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
-    testInputIsEmpty(sut, 'name-input');
-    testInputIsEmpty(sut, 'email-input');
-    testInputIsEmpty(sut, 'password-input');
-    testInputIsEmpty(sut, 'confirm-password-input');
-    testButtonIsDisabled(sut, 'submit');
+    Helper.testInputIsEmpty(sut, 'name-input');
+    Helper.testInputIsEmpty(sut, 'email-input');
+    Helper.testInputIsEmpty(sut, 'password-input');
+    Helper.testInputIsEmpty(sut, 'confirm-password-input');
+    Helper.testButtonIsDisabled(sut, 'submit');
   });
 
   test('should present error if register form is invalid', async () => {
     const {sut, validationStub} = makeSut();
     validationStub.error = faker.random.words();
-    fillIpunt(sut, 'password-input');
+    Helper.fillIpunt(sut, 'password-input');
     const errorStatus = sut.getByTestId('error-message');
     expect(errorStatus.children).toHaveLength(1);
   });
 
   test('should enable button if register form is valid', async () => {
     const {sut} = makeSut();
-    fillIpunt(sut, 'password-input');
-    fillIpunt(sut, 'email-input');
-    fillIpunt(sut, 'name-input');
-    fillIpunt(sut, 'confirm-password-input');
-    testButtonIsEnabled(sut, 'submit');
+    Helper.fillIpunt(sut, 'password-input');
+    Helper.fillIpunt(sut, 'email-input');
+    Helper.fillIpunt(sut, 'name-input');
+    Helper.fillIpunt(sut, 'confirm-password-input');
+    Helper.testButtonIsEnabled(sut, 'submit');
   });
 
   test('should render register loading if form is submited', async () => {
     const {sut, validationStub} = makeSut();
     validationStub.error = undefined;
-    fillIpunt(sut, 'password-input');
-    fillIpunt(sut, 'email-input');
-    fillIpunt(sut, 'name-input');
-    fillIpunt(sut, 'confirm-password-input');
-    simulateSubmit(sut);
-    testIfIsLoading(sut);
+    Helper.fillIpunt(sut, 'password-input');
+    Helper.fillIpunt(sut, 'email-input');
+    Helper.fillIpunt(sut, 'name-input');
+    Helper.fillIpunt(sut, 'confirm-password-input');
+    Helper.simulateSubmit(sut);
+    Helper.testIfIsLoading(sut);
   });
 
   test('should call registration with correct values', async () => {
@@ -98,11 +86,11 @@ describe('Login Screen', () => {
     const password = faker.internet.password();
     const name = faker.random.word();
     const passwordConfirmation = faker.internet.password();
-    fillIpunt(sut, 'email-input', email);
-    fillIpunt(sut, 'password-input', password);
-    fillIpunt(sut, 'name-input', name);
-    fillIpunt(sut, 'confirm-password-input', passwordConfirmation);
-    simulateSubmit(sut);
+    Helper.fillIpunt(sut, 'email-input', email);
+    Helper.fillIpunt(sut, 'password-input', password);
+    Helper.fillIpunt(sut, 'name-input', name);
+    Helper.fillIpunt(sut, 'confirm-password-input', passwordConfirmation);
+    Helper.simulateSubmit(sut);
     expect(registrationSpy.params).toEqual({
       name,
       email,
@@ -115,8 +103,8 @@ describe('Login Screen', () => {
     const {sut, validationStub, registrationSpy} = makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-    simulateSubmit(sut);
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     expect(registrationSpy.callsCount).toEqual(1);
   });
 
@@ -128,9 +116,9 @@ describe('Login Screen', () => {
     jest
       .spyOn(registrationSpy, 'register')
       .mockReturnValue(Promise.reject(error));
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');
-    await waitFor(() => errorWrapper);
+    await Testing.waitFor(() => errorWrapper);
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
@@ -139,7 +127,7 @@ describe('Login Screen', () => {
     const {sut, validationStub, registrationSpy} = makeSut();
     validationStub.error = faker.random.words();
     pupulateForm(sut);
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     expect(registrationSpy.callsCount).toEqual(0);
   });
 
@@ -148,9 +136,9 @@ describe('Login Screen', () => {
       makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     const loginContainer = sut.getByTestId('login-container');
-    await waitFor(() => loginContainer);
+    await Testing.waitFor(() => loginContainer);
     expect(saveAccessTokenMock.accessToken).toBe(
       registrationSpy.account.accessToken,
     );
@@ -163,9 +151,9 @@ describe('Login Screen', () => {
     jest
       .spyOn(saveAccessTokenMock, 'save')
       .mockReturnValue(Promise.reject(error));
-    simulateSubmit(sut);
+    Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');
-    await waitFor(() => errorWrapper);
+    await Testing.waitFor(() => errorWrapper);
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
@@ -173,7 +161,7 @@ describe('Login Screen', () => {
   test('should call Validation with correct name', async () => {
     const {sut, validationStub} = makeSut();
     const name = faker.name.firstName();
-    fillIpunt(sut, 'name-input', name);
+    Helper.fillIpunt(sut, 'name-input', name);
     expect(validationStub.fieldname).toEqual('name');
     expect(validationStub.fieldvalue).toEqual(name);
   });
@@ -181,7 +169,7 @@ describe('Login Screen', () => {
   test('should call Validation with correct password', async () => {
     const {sut, validationStub} = makeSut();
     const password = faker.internet.password();
-    fillIpunt(sut, 'password-input', password);
+    Helper.fillIpunt(sut, 'password-input', password);
     expect(validationStub.fieldname).toEqual('password');
     expect(validationStub.fieldvalue).toEqual(password);
   });
@@ -189,7 +177,7 @@ describe('Login Screen', () => {
   test('should call Validation with correct email', async () => {
     const {sut, validationStub} = makeSut();
     const email = faker.internet.email();
-    fillIpunt(sut, 'email-input', email);
+    Helper.fillIpunt(sut, 'email-input', email);
     expect(validationStub.fieldname).toEqual('email');
     expect(validationStub.fieldvalue).toEqual(email);
   });
@@ -197,7 +185,7 @@ describe('Login Screen', () => {
   test('should call Validation with correct passwordConfirmation', async () => {
     const {sut, validationStub} = makeSut();
     const password = faker.internet.password();
-    fillIpunt(sut, 'confirm-password-input', password);
+    Helper.fillIpunt(sut, 'confirm-password-input', password);
     expect(validationStub.fieldname).toEqual('passwordConfirmation');
     expect(validationStub.fieldvalue).toEqual(password);
   });
