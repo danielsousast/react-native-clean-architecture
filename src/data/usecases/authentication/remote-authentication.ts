@@ -11,10 +11,7 @@ import {AccountModel} from '@/domain/models/account-model';
 export class RemoteAuthentication implements Authentication {
   constructor(
     private readonly url: string,
-    private readonly httpClient: HttpPostClient<
-      AuthenticationParams,
-      AccountModel
-    >,
+    private readonly httpClient: HttpPostClient<AccountModel>,
   ) {}
   async auth(body: AuthenticationParams): Promise<AccountModel | undefined> {
     const response = await this.httpClient.post({

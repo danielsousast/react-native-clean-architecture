@@ -8,7 +8,7 @@ export enum HttpStatusCode {
   notFound = 404,
 }
 
-export type HttpResponse<T> = {
+export type HttpResponse<T = any> = {
   statusCode: HttpStatusCode;
   body?: T;
 };

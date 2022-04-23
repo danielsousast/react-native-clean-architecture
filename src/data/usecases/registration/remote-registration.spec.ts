@@ -5,18 +5,14 @@ import {HttpStatusCode} from '@/data/protocols/http/http-response';
 import {UnexpectedError, EmailInUseError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models/account-model';
 import {RemoteRegistration} from './remote-registration';
-import {RegistrationParams} from '@/domain/usecases/registration';
 
 type SutTypes = {
   sut: RemoteRegistration;
-  httpPostClient: HttpPostClientSpy<RegistrationParams, AccountModel>;
+  httpPostClient: HttpPostClientSpy<AccountModel>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClient = new HttpPostClientSpy<
-    RegistrationParams,
-    AccountModel
-  >();
+  const httpPostClient = new HttpPostClientSpy<AccountModel>();
   const sut = new RemoteRegistration(url, httpPostClient);
   return {
     sut,

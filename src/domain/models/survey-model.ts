@@ -3,7 +3,7 @@ export type SurveyModel = {
   question: string;
   answers: [
     {
-      iamge?: string;
+      image?: string;
       answer: string;
     },
   ];

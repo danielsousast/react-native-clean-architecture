@@ -7,10 +7,7 @@ import {Registration, RegistrationParams} from '@/domain/usecases/registration';
 export class RemoteRegistration implements Registration {
   constructor(
     private readonly url: string,
-    private readonly httpClient: HttpPostClient<
-      RegistrationParams,
-      AccountModel
-    >,
+    private readonly httpClient: HttpPostClient<AccountModel>,
   ) {}
   async register(body: RegistrationParams): Promise<AccountModel | undefined> {
     const response = await this.httpClient.post({
