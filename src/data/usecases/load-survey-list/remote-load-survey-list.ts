@@ -1,5 +1,4 @@
-import {HttpGetClient} from '@/data/protocols/http/http-get-client';
-import {HttpStatusCode} from '@/data/protocols/http/http-response';
+import {HttpGetClient, HttpStatusCode} from '@/data/protocols/http';
 import {UnexpectedError} from '@/domain/errors';
 
 export class RemoteLoadSurveyList {

@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
-import {HttpGetClientSpy} from '@/data/test/mock-http';
+import {HttpGetClientSpy} from '@/data/test';
 import {RemoteLoadSurveyList} from './remote-load-survey-list';
-import {HttpStatusCode} from '@/data/protocols/http/http-response';
+import {HttpStatusCode} from '@/data/protocols/http';
 import {UnexpectedError} from '@/domain/errors';
 import {SurveyModel} from '@/domain/models';
 

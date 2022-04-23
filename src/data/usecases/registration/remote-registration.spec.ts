@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
 import {mockAccountModel, mockRegistration} from '@/domain/test/mock-account';
-import {HttpPostClientSpy} from '@/data/test/mock-http';
-import {HttpStatusCode} from '@/data/protocols/http/http-response';
+import {HttpPostClientSpy} from '@/data/test';
+import {HttpStatusCode} from '@/data/protocols/http';
 import {UnexpectedError, EmailInUseError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models/account-model';
 import {RemoteRegistration} from './remote-registration';

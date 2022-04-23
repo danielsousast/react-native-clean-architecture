@@ -1,8 +1,7 @@
-import {HttpPostClient} from '@/data/protocols/http/http-post-client';
-import {HttpStatusCode} from '@/data/protocols/http/http-response';
+import {HttpPostClient, HttpStatusCode} from '@/data/protocols/http';
 import {EmailInUseError, UnexpectedError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models/account-model';
-import {Registration, RegistrationParams} from '@/domain/usecases/registration';
+import {Registration, RegistrationParams} from '@/domain/usecases';
 
 export class RemoteRegistration implements Registration {
   constructor(
