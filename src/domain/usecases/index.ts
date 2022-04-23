@@ -1,2 +1,2 @@
-export {Authentication} from './authentication';
-export {SaveAccessToken} from './save-access-token';
+export * from './authentication';
+export * from './save-access-token';
