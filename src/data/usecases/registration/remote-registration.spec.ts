@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker';
-import {mockAccountModel, mockRegistration} from '@/domain/test/mock-account';
+import {mockAccountModel, mockRegistration} from '@/domain/test';
 import {HttpPostClientSpy} from '@/data/test';
 import {HttpStatusCode} from '@/data/protocols/http';
 import {UnexpectedError, EmailInUseError} from '@/domain/errors';
