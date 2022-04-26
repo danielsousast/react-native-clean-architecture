@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {mockPostRequest} from '@/data/test/mock-http';
+import {mockGetRequest, mockPostRequest} from '@/data/test/mock-http';
 import {mockAxios} from '@/infra/test/mock-axios';
 import {AxiosHttpClient} from './axios-http-client';
 
@@ -19,10 +19,17 @@ const makeSut = (): SutTypes => {
 };
 
 describe('AxiosHttpClient', () => {
-  test('should call axios with correct values', async () => {
+  test('should call axios.post with correct values', async () => {
     const request = mockPostRequest();
     const {sut, mockedAxios} = makeSut();
     sut.post(request);
     expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
+  });
+
+  test('should call axios.get with correct values', async () => {
+    const request = mockGetRequest();
+    const {sut, mockedAxios} = makeSut();
+    sut.get(request);
+    expect(mockedAxios.get).toHaveBeenCalledWith(request.url);
   });
 });
