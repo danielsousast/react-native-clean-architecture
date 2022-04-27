@@ -9,19 +9,19 @@ import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
 import {Container} from './styles';
-import {SaveAccessToken} from '@/domain/usecases/save-access-token';
+import {SaveCurrentAccount} from '@/domain/usecases/save-current-account';
 import {useNavigation} from '@react-navigation/native';
 
 type LoginProps = {
   validation: Validation;
   authentication: Authentication;
-  saveAccessToken: SaveAccessToken;
+  saveCurrentAccount: SaveCurrentAccount;
 };
 
 export const Login: React.FC<LoginProps> = ({
   validation,
   authentication,
-  saveAccessToken,
+  saveCurrentAccount,
 }) => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -55,7 +55,10 @@ export const Login: React.FC<LoginProps> = ({
     try {
       setLoading(true);
       const account = await authentication.auth({email, password});
-      await saveAccessToken.save(account?.accessToken as string);
+      await saveCurrentAccount.save({
+        name: account?.name as string,
+        accessToken: account?.accessToken as string,
+      });
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);

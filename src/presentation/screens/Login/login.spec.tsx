@@ -6,19 +6,19 @@ import {Login} from '@/presentation/screens/Login';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
-import {SaveAccessTokenMock} from '@/presentation/test/mock-save-access-token';
+import {SaveCurrentAccountMock} from '@/presentation/test/mock-save-current-account';
 import * as Helper from '@/presentation/test/form-helper';
 interface SutTypes {
   sut: Testing.RenderAPI;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  saveAccessTokenMock: SaveAccessTokenMock;
+  saveCurrentAccountMock: SaveCurrentAccountMock;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub();
   const authenticationSpy = new AuthenticationSpy();
-  const saveAccessTokenMock = new SaveAccessTokenMock();
+  const saveCurrentAccountMock = new SaveCurrentAccountMock();
   validationStub.error = 'any_error';
 
   const sut = Testing.render(
@@ -26,11 +26,11 @@ const makeSut = (): SutTypes => {
       <Login
         validation={validationStub}
         authentication={authenticationSpy}
-        saveAccessToken={saveAccessTokenMock}
+        saveCurrentAccount={saveCurrentAccountMock}
       />
     </NavigationContainer>,
   );
-  return {sut, validationStub, authenticationSpy, saveAccessTokenMock};
+  return {sut, validationStub, authenticationSpy, saveCurrentAccountMock};
 };
 
 const pupulateForm = (sut: Testing.RenderAPI) => {
@@ -124,25 +124,23 @@ describe('Login Screen', () => {
     expect(errorMessage.children[0]).toEqual(error.message);
   });
 
-  test('should call SaveAccessToken on success', async () => {
-    const {sut, validationStub, authenticationSpy, saveAccessTokenMock} =
+  test('should call SaveCurrentAccount on success', async () => {
+    const {sut, validationStub, authenticationSpy, saveCurrentAccountMock} =
       makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
     const loginContainer = sut.getByTestId('login-container');
     await Testing.waitFor(() => loginContainer);
-    expect(saveAccessTokenMock.accessToken).toBe(
-      authenticationSpy.account.accessToken,
-    );
+    expect(saveCurrentAccountMock.account).toEqual(authenticationSpy.account);
   });
 
-  test('should present error if SaveAccessToken fails', async () => {
-    const {sut, saveAccessTokenMock} = makeSut();
+  test('should present error if SaveCurrentAccount fails', async () => {
+    const {sut, saveCurrentAccountMock} = makeSut();
     pupulateForm(sut);
     const error = new Error('Any Error');
     jest
-      .spyOn(saveAccessTokenMock, 'save')
+      .spyOn(saveCurrentAccountMock, 'save')
       .mockReturnValue(Promise.reject(error));
     Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');

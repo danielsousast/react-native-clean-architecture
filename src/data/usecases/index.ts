@@ -1,3 +1,3 @@
 export * from './authentication/remote-authentication';
 export * from './registration/remote-registration';
-export * from './save-access-token/local-save-access-token';
+export * from './save-current-account/local-save-current-account';
