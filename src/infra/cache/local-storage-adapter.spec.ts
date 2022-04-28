@@ -7,11 +7,11 @@ const makeSut = (): LocalStorageAdapter => {
 };
 
 describe('LocalStorageAdapter', () => {
-  test('should call AsyncStorage with correct values', async () => {
+  test('should call AsyncStorage with correct values', () => {
     const sut = makeSut();
     const key = faker.database.column();
     const value = faker.random.word();
-    await sut.set(key, value);
+    sut.set(key, value);
     expect(AsyncStorage.setItem).toHaveBeenCalledWith(key, value);
   });
 });

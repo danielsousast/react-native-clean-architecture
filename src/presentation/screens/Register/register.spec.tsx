@@ -1,36 +1,33 @@
 import React from 'react';
 import faker from '@faker-js/faker';
 import * as Testing from '@testing-library/react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {Register} from '@/presentation/screens/Register';
 import {RegistrationSpy} from '@/presentation/test/mock-registration';
 import * as Helper from '@/presentation/test/form-helper';
-import {SaveCurrentAccountMock} from '@/presentation/test/mock-save-current-account';
+import {renderWithAuthProvider} from '@/../jest/helpers';
+import {AccountModel} from '@/domain/models';
 
 interface SutTypes {
   sut: Testing.RenderAPI;
   validationStub: ValidationStub;
   registrationSpy: RegistrationSpy;
-  saveCurrentAccountMock: SaveCurrentAccountMock;
+  setCurrentAccount: (account: AccountModel) => void;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub();
   const registrationSpy = new RegistrationSpy();
-  const saveCurrentAccountMock = new SaveCurrentAccountMock();
   validationStub.error = 'any_error';
+  const setCurrentAccount = jest.fn();
 
-  const sut = Testing.render(
-    <NavigationContainer>
-      <Register
-        validation={validationStub}
-        registration={registrationSpy}
-        saveCurrentAccount={saveCurrentAccountMock}
-      />
-    </NavigationContainer>,
-  );
-  return {sut, validationStub, registrationSpy, saveCurrentAccountMock};
+  const sut = renderWithAuthProvider({
+    component: (
+      <Register validation={validationStub} registration={registrationSpy} />
+    ),
+    setCurrentAccount,
+  });
+  return {sut, validationStub, registrationSpy, setCurrentAccount};
 };
 
 const pupulateForm = (sut: Testing.RenderAPI) => {
@@ -40,7 +37,7 @@ const pupulateForm = (sut: Testing.RenderAPI) => {
   Helper.fillIpunt(sut, 'confirm-password-input');
 };
 
-describe('Login Screen', () => {
+describe('Register Screen', () => {
   afterEach(Testing.cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
@@ -132,28 +129,13 @@ describe('Login Screen', () => {
   });
 
   test('should call SaveCurrentAccount on success', async () => {
-    const {sut, validationStub, registrationSpy, saveCurrentAccountMock} =
-      makeSut();
+    const {sut, validationStub, registrationSpy, setCurrentAccount} = makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
     const loginContainer = sut.getByTestId('login-container');
     await Testing.waitFor(() => loginContainer);
-    expect(saveCurrentAccountMock.account).toEqual(registrationSpy.account);
-  });
-
-  test('should present error if SaveCurrentAccount fails', async () => {
-    const {sut, saveCurrentAccountMock} = makeSut();
-    pupulateForm(sut);
-    const error = new Error('any_error');
-    jest
-      .spyOn(saveCurrentAccountMock, 'save')
-      .mockReturnValue(Promise.reject(error));
-    Helper.simulateSubmit(sut);
-    const errorWrapper = sut.getByTestId('error-wrapper');
-    await Testing.waitFor(() => errorWrapper);
-    const errorMessage = sut.getByTestId('error-message');
-    expect(errorMessage.children[0]).toEqual(error.message);
+    expect(setCurrentAccount).toHaveBeenCalledWith(registrationSpy.account);
   });
 
   test('should call Validation with correct name', async () => {

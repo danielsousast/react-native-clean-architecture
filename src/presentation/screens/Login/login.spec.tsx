@@ -1,36 +1,33 @@
 import React from 'react';
 import faker from '@faker-js/faker';
 import * as Testing from '@testing-library/react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {Login} from '@/presentation/screens/Login';
 import {ValidationStub} from '@/presentation/test/mock-validation';
 import {AuthenticationSpy} from '@/presentation/test/mock-authentication';
 import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
-import {SaveCurrentAccountMock} from '@/presentation/test/mock-save-current-account';
 import * as Helper from '@/presentation/test/form-helper';
+import {renderWithAuthProvider} from '@/../jest/helpers';
+import {AccountModel} from '@/domain/models';
 interface SutTypes {
   sut: Testing.RenderAPI;
   validationStub: ValidationStub;
   authenticationSpy: AuthenticationSpy;
-  saveCurrentAccountMock: SaveCurrentAccountMock;
+  setCurrentAccount: (account: AccountModel) => void;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = new ValidationStub();
   const authenticationSpy = new AuthenticationSpy();
-  const saveCurrentAccountMock = new SaveCurrentAccountMock();
+  const setCurrentAccount = jest.fn();
   validationStub.error = 'any_error';
 
-  const sut = Testing.render(
-    <NavigationContainer>
-      <Login
-        validation={validationStub}
-        authentication={authenticationSpy}
-        saveCurrentAccount={saveCurrentAccountMock}
-      />
-    </NavigationContainer>,
-  );
-  return {sut, validationStub, authenticationSpy, saveCurrentAccountMock};
+  const sut = renderWithAuthProvider({
+    component: (
+      <Login validation={validationStub} authentication={authenticationSpy} />
+    ),
+    setCurrentAccount,
+  });
+  return {sut, validationStub, authenticationSpy, setCurrentAccount};
 };
 
 const pupulateForm = (sut: Testing.RenderAPI) => {
@@ -125,27 +122,13 @@ describe('Login Screen', () => {
   });
 
   test('should call SaveCurrentAccount on success', async () => {
-    const {sut, validationStub, authenticationSpy, saveCurrentAccountMock} =
+    const {sut, validationStub, authenticationSpy, setCurrentAccount} =
       makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
     const loginContainer = sut.getByTestId('login-container');
     await Testing.waitFor(() => loginContainer);
-    expect(saveCurrentAccountMock.account).toEqual(authenticationSpy.account);
-  });
-
-  test('should present error if SaveCurrentAccount fails', async () => {
-    const {sut, saveCurrentAccountMock} = makeSut();
-    pupulateForm(sut);
-    const error = new Error('Any Error');
-    jest
-      .spyOn(saveCurrentAccountMock, 'save')
-      .mockReturnValue(Promise.reject(error));
-    Helper.simulateSubmit(sut);
-    const errorWrapper = sut.getByTestId('error-wrapper');
-    await Testing.waitFor(() => errorWrapper);
-    const errorMessage = sut.getByTestId('error-message');
-    expect(errorMessage.children[0]).toEqual(error.message);
+    expect(setCurrentAccount).toHaveBeenCalledWith(authenticationSpy.account);
   });
 });

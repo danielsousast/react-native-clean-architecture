@@ -9,21 +9,18 @@ import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
 import {Container} from './styles';
-import {SaveCurrentAccount} from '@/domain/usecases/save-current-account';
 import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '@/presentation/context/api/auth-context';
+import {AccountModel} from '@/domain/models';
 
 type LoginProps = {
   validation: Validation;
   authentication: Authentication;
-  saveCurrentAccount: SaveCurrentAccount;
 };
 
-export const Login: React.FC<LoginProps> = ({
-  validation,
-  authentication,
-  saveCurrentAccount,
-}) => {
+export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
   const navigation = useNavigation();
+  const {setCurrentAccount} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = React.useState(false);
@@ -48,17 +45,11 @@ export const Login: React.FC<LoginProps> = ({
   }, [password, validate, validation]);
 
   async function onSubmit() {
-    if (loading) {
-      return;
-    }
-
+    if (loading) return;
     try {
       setLoading(true);
       const account = await authentication.auth({email, password});
-      await saveCurrentAccount.save({
-        name: account?.name as string,
-        accessToken: account?.accessToken as string,
-      });
+      setCurrentAccount(account as AccountModel);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);

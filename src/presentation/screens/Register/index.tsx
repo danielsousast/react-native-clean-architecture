@@ -8,21 +8,21 @@ import Spinner from '@/presentation/components/Spinner';
 import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Registration} from '@/domain/usecases/registration';
-import {SaveCurrentAccount} from '@/domain/usecases';
 import {Container} from './styles';
+import {useAuth} from '@/presentation/context/api/auth-context';
+import {AccountModel} from '@/domain/models';
 
 type RegisterProps = {
   validation: Validation;
   registration: Registration;
-  saveCurrentAccount: SaveCurrentAccount;
 };
 
 export const Register: React.FC<RegisterProps> = ({
   validation,
   registration,
-  saveCurrentAccount,
 }) => {
   const navigation = useNavigation();
+  const {setCurrentAccount} = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -67,11 +67,7 @@ export const Register: React.FC<RegisterProps> = ({
         password,
         passwordConfirmation,
       });
-
-      await saveCurrentAccount.save({
-        name: account?.name as string,
-        accessToken: account?.accessToken as string,
-      });
+      setCurrentAccount(account as AccountModel);
     } catch (e) {
       setError((e as Error).message);
       setLoading(false);
