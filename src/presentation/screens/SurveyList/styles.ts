@@ -12,3 +12,12 @@ export const Content = styled.View`
 `;
 
 export const List = styled.FlatList``;
+
+export const ErrorWrap = styled.View``;
+
+export const ErrorTitle = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+export const ErrorDescription = styled.Text``;

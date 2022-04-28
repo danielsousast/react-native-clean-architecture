@@ -1,7 +1,7 @@
-import {SetStorage} from '@/data/protocols/cache/set-storage';
+import {Storage} from '@/data/protocols/cache/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export class LocalStorageAdapter implements SetStorage {
+export class LocalStorageAdapter implements Storage {
   set(key: string, value: any): void {
     AsyncStorage.setItem(key, JSON.stringify(value));
   }
@@ -12,5 +12,9 @@ export class LocalStorageAdapter implements SetStorage {
       return await JSON.parse(response);
     }
     return undefined;
+  }
+
+  async clear(): Promise<any> {
+    await AsyncStorage.clear();
   }
 }

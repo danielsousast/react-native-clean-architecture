@@ -36,7 +36,6 @@ const pupulateForm = (sut: Testing.RenderAPI) => {
 };
 
 describe('Login Screen', () => {
-  afterEach(Testing.cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
     Helper.testButtonIsDisabled(sut, 'submit');

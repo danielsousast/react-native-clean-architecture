@@ -38,7 +38,6 @@ const pupulateForm = (sut: Testing.RenderAPI) => {
 };
 
 describe('Register Screen', () => {
-  afterEach(Testing.cleanup);
   test('should start with initial state', async () => {
     const {sut} = makeSut();
     Helper.testInputIsEmpty(sut, 'name-input');

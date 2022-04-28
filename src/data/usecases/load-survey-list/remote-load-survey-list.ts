@@ -4,6 +4,7 @@ import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
 
 export class RemoteLoadSurveyList implements LoadSurveyList {
+  callsCount: number = 0;
   constructor(
     private readonly url: string,
     private readonly httpGetClient: HttpGetClient<SurveyModel[] | undefined>,
