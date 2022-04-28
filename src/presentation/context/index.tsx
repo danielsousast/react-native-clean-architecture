@@ -1,9 +1,14 @@
 import React from 'react';
-import {AuthProvider} from './api/auth-context';
-import {setCurrentAccountAdapter} from '@/main/adapters';
+import {AuthProvider} from './auth-context';
+import {
+  setCurrentAccountAdapter,
+  getCurrentAccountAdapter,
+} from '@/main/adapters';
 
 const AppProvider: React.FC = ({children}) => (
-  <AuthProvider setCurrentAccount={setCurrentAccountAdapter}>
+  <AuthProvider
+    setCurrentAccount={setCurrentAccountAdapter}
+    getCurrentAccount={getCurrentAccountAdapter}>
     {children}
   </AuthProvider>
 );

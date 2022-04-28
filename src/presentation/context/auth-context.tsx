@@ -1,16 +1,18 @@
+/* eslint-disable curly */
 import {AccountModel} from '@/domain/models';
-import React, {createContext, useContext} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 
 interface ContextData {
+  account?: AccountModel;
   setCurrentAccount: (account: AccountModel) => void;
-  getCurrentAccount: () => AccountModel;
+  getCurrentAccount: () => Promise<AccountModel>;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
 
 type AuthProviderProps = {
   setCurrentAccount: (account: AccountModel) => void;
-  getCurrentAccount: () => AccountModel;
+  getCurrentAccount: () => Promise<AccountModel>;
 };
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({
@@ -18,8 +20,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   getCurrentAccount,
   children,
 }) => {
+  const [account, setAccount] = useState<AccountModel>();
+
+  useEffect(() => {
+    async function loadAccount() {
+      if (!account?.accessToken) {
+        const response = await getCurrentAccount();
+        if (response?.accessToken) setAccount(response);
+      }
+    }
+    loadAccount();
+  }, [account?.accessToken, getCurrentAccount]);
+
   return (
-    <AuthContext.Provider value={{setCurrentAccount, getCurrentAccount}}>
+    <AuthContext.Provider
+      value={{setCurrentAccount, getCurrentAccount, account}}>
       {children}
     </AuthContext.Provider>
   );

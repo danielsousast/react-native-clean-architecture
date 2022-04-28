@@ -2,12 +2,13 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AuthStack} from './AuthStack';
 import {AppStack} from './AppStack';
+import {useAuth} from '@/presentation/context/auth-context';
 
 export const Navigator: React.FC = () => {
-  const isLogged = true;
+  const {account} = useAuth();
   return (
     <NavigationContainer>
-      {isLogged ? <AppStack /> : <AuthStack />}
+      {account?.accessToken ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

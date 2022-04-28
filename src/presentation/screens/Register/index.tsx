@@ -9,7 +9,7 @@ import LinkButton from '@/presentation/components/LinkButton';
 import {Validation} from '@/presentation/protocols/validation';
 import {Registration} from '@/domain/usecases/registration';
 import {Container} from './styles';
-import {useAuth} from '@/presentation/context/api/auth-context';
+import {useAuth} from '@/presentation/context/auth-context';
 import {AccountModel} from '@/domain/models';
 
 type RegisterProps = {

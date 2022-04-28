@@ -10,7 +10,7 @@ import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
 import {Container} from './styles';
 import {useNavigation} from '@react-navigation/native';
-import {useAuth} from '@/presentation/context/api/auth-context';
+import {useAuth} from '@/presentation/context/auth-context';
 import {AccountModel} from '@/domain/models';
 
 type LoginProps = {

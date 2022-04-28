@@ -1,4 +1,4 @@
-import {AuthProvider} from '@/presentation/context/api/auth-context';
+import {AuthProvider} from '@/presentation/context/auth-context';
 import {NavigationContainer} from '@react-navigation/native';
 import * as Testing from '@testing-library/react-native';
 import React from 'react';
@@ -13,7 +13,9 @@ export const renderWithAuthProvider = ({
   setCurrentAccount,
 }: params) => {
   return Testing.render(
-    <AuthProvider setCurrentAccount={setCurrentAccount}>
+    <AuthProvider
+      setCurrentAccount={setCurrentAccount}
+      getCurrentAccount={jest.fn()}>
       <NavigationContainer>{component}</NavigationContainer>
     </AuthProvider>,
   );
