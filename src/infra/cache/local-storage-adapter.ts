@@ -5,4 +5,12 @@ export class LocalStorageAdapter implements SetStorage {
   set(key: string, value: any): void {
     AsyncStorage.setItem(key, value);
   }
+
+  async get(key: string): Promise<any> {
+    const response = await AsyncStorage.getItem(key);
+    if (response) {
+      return await JSON.parse(response);
+    }
+    return undefined;
+  }
 }

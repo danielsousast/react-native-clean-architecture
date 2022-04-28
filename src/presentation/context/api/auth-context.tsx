@@ -3,20 +3,23 @@ import React, {createContext, useContext} from 'react';
 
 interface ContextData {
   setCurrentAccount: (account: AccountModel) => void;
+  getCurrentAccount: () => AccountModel;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
 
 type AuthProviderProps = {
   setCurrentAccount: (account: AccountModel) => void;
+  getCurrentAccount: () => AccountModel;
 };
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({
   setCurrentAccount,
+  getCurrentAccount,
   children,
 }) => {
   return (
-    <AuthContext.Provider value={{setCurrentAccount}}>
+    <AuthContext.Provider value={{setCurrentAccount, getCurrentAccount}}>
       {children}
     </AuthContext.Provider>
   );
