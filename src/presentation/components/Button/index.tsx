@@ -2,6 +2,7 @@ import React from 'react';
 import {Container, Text} from './styles';
 
 interface ButtonProps {
+  title: string;
   marginTop?: number;
   testID?: string;
   disabled?: boolean;
@@ -9,6 +10,7 @@ interface ButtonProps {
 }
 
 export const Button: React.FC<ButtonProps> = ({
+  title,
   marginTop,
   disabled,
   testID,
@@ -20,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
       testID={testID}
       disabled={disabled}
       onPress={onPress}>
-      <Text>Entrar</Text>
+      <Text>{title}</Text>
     </Container>
   );
 };

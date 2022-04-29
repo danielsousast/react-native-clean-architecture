@@ -77,6 +77,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
         testID="password-input"
       />
       <Button
+        title="Entrar"
         testID="submit"
         marginTop={16}
         disabled={!password || !email}

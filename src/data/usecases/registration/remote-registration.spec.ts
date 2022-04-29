@@ -24,14 +24,14 @@ describe('RemoteRegistration', () => {
   test('should call HHttpClient with correct url', async () => {
     const url = faker.internet.url();
     const {sut, httpPostClient} = makeSut(url);
-    sut.register(mockRegistration());
+    sut.execute(mockRegistration());
     expect(httpPostClient.url).toBe(url);
   });
 
   test('should call HHttpClient with correct body', async () => {
     const {sut, httpPostClient} = makeSut();
     const registrationParams = mockRegistration();
-    sut.register(registrationParams);
+    sut.execute(registrationParams);
     expect(httpPostClient.body).toEqual(registrationParams);
   });
 
@@ -40,7 +40,7 @@ describe('RemoteRegistration', () => {
     httpPostClient.response = {
       statusCode: HttpStatusCode.forbidden,
     };
-    const promise = sut.register(mockRegistration());
+    const promise = sut.execute(mockRegistration());
     expect(promise).rejects.toThrow(new EmailInUseError());
   });
 
@@ -49,7 +49,7 @@ describe('RemoteRegistration', () => {
     httpPostClient.response = {
       statusCode: HttpStatusCode.badRequest,
     };
-    const promise = sut.register(mockRegistration());
+    const promise = sut.execute(mockRegistration());
     expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
@@ -58,7 +58,7 @@ describe('RemoteRegistration', () => {
     httpPostClient.response = {
       statusCode: HttpStatusCode.internalError,
     };
-    const promise = sut.register(mockRegistration());
+    const promise = sut.execute(mockRegistration());
     expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
@@ -67,7 +67,7 @@ describe('RemoteRegistration', () => {
     httpPostClient.response = {
       statusCode: HttpStatusCode.notFound,
     };
-    const promise = sut.register(mockRegistration());
+    const promise = sut.execute(mockRegistration());
     expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
@@ -78,7 +78,7 @@ describe('RemoteRegistration', () => {
       statusCode: HttpStatusCode.success,
       body: httpResult,
     };
-    const account = await sut.register(mockRegistration());
+    const account = await sut.execute(mockRegistration());
     expect(account).toEqual(httpResult);
   });
 });

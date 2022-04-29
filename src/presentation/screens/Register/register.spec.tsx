@@ -110,7 +110,7 @@ describe('Register Screen', () => {
     pupulateForm(sut);
     const error = new Error('any_error');
     jest
-      .spyOn(registrationSpy, 'register')
+      .spyOn(registrationSpy, 'execute')
       .mockReturnValue(Promise.reject(error));
     Helper.simulateSubmit(sut);
     const errorWrapper = sut.getByTestId('error-wrapper');

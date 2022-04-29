@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SurveyList from '@/presentation/screens/SurveyList';
+import {MakeSurveyListScreen} from '@/main/factories/screens';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -12,7 +12,7 @@ export const AppStack: React.FC<AppStackProps> = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Screen name="SurveyList" component={SurveyList} />
+      <Screen name="SurveyList" component={MakeSurveyListScreen} />
     </Navigator>
   );
 };

@@ -61,7 +61,7 @@ export const Register: React.FC<RegisterProps> = ({
     if (loading || error) return;
     try {
       setLoading(true);
-      const account = await registration.register({
+      const account = await registration.execute({
         name,
         email,
         password,
@@ -112,12 +112,13 @@ export const Register: React.FC<RegisterProps> = ({
         testID="confirm-password-input"
       />
       <Button
+        title="Cadastrar"
         testID="submit"
         marginTop={16}
         disabled={!password || !email || !name || !passwordConfirmation}
         onPress={onSubmit}
       />
-      <LinkButton testID="register-button" onPress={onLinkPress}>
+      <LinkButton testID="login-button" onPress={onLinkPress}>
         Fazer login
       </LinkButton>
       <ErrorMessage error={error} />

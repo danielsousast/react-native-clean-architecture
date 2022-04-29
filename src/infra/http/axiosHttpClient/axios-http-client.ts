@@ -1,10 +1,11 @@
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import {HttpGetParams} from '@/data/protocols/http';
 import {
   HttpPostClient,
   HttpPostParams,
 } from '@/data/protocols/http/http-post-client';
 import {HttpResponse} from '@/data/protocols/http/http-response';
-import axios, {AxiosError, AxiosResponse} from 'axios';
+import {ErrorLog} from '@/lib/ErrorLog';
 
 export class AxiosHttpClient implements HttpPostClient {
   async post(params: HttpPostParams): Promise<HttpResponse> {
@@ -12,6 +13,7 @@ export class AxiosHttpClient implements HttpPostClient {
     try {
       axiosResponse = await axios.post(params.url, params.body);
     } catch (error) {
+      ErrorLog.log('AxiosHttpClient.post', error as Error);
       axiosResponse = (error as AxiosError).response as any;
     }
     return this.adapt(axiosResponse);
@@ -22,6 +24,7 @@ export class AxiosHttpClient implements HttpPostClient {
     try {
       axiosResponse = await axios.get(params.url);
     } catch (error) {
+      ErrorLog.log('AxiosHttpClient.get', error as Error);
       axiosResponse = (error as AxiosError).response as any;
     }
     return this.adapt(axiosResponse);
@@ -29,8 +32,8 @@ export class AxiosHttpClient implements HttpPostClient {
 
   private adapt(axiosResponse: AxiosResponse): HttpResponse {
     return {
-      statusCode: axiosResponse.status,
-      body: axiosResponse.data,
+      statusCode: axiosResponse?.status,
+      body: axiosResponse?.data,
     };
   }
 }

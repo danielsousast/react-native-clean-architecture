@@ -3,13 +3,7 @@ import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
 import SurveyCard from '@/presentation/components/SurveyCard';
 import React, {useEffect, useState} from 'react';
-import {
-  Container,
-  Content,
-  ErrorDescription,
-  ErrorTitle,
-  ErrorWrap,
-} from './styles';
+import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
 
 type SurveyList = {
   loadSurveyList: LoadSurveyList;
@@ -36,7 +30,6 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
     return (
       <ErrorWrap>
         <ErrorTitle testID="error-title">{error?.message}</ErrorTitle>
-        <ErrorDescription>Tente novamente mais tarde</ErrorDescription>
       </ErrorWrap>
     );
   }

@@ -8,5 +8,5 @@ export type RegistrationParams = {
 };
 
 export interface Registration {
-  register(crendetials: RegistrationParams): Promise<AccountModel | undefined>;
+  execute(params: RegistrationParams): Promise<AccountModel | undefined>;
 }

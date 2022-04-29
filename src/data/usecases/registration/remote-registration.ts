@@ -8,7 +8,7 @@ export class RemoteRegistration implements Registration {
     private readonly url: string,
     private readonly httpClient: HttpPostClient<AccountModel>,
   ) {}
-  async register(body: RegistrationParams): Promise<AccountModel | undefined> {
+  async execute(body: RegistrationParams): Promise<AccountModel | undefined> {
     const response = await this.httpClient.post({
       url: this.url,
       body,

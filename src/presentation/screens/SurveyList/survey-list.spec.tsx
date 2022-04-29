@@ -1,19 +1,8 @@
 import React from 'react';
 import * as Testing from '@testing-library/react-native';
-import {LoadSurveyList} from '@/domain/usecases';
-import {SurveyModel} from '@/domain/models';
-import {mockSurveyList} from '@/domain/test';
 import SurveyList from '.';
-import {UnexpectedError} from '@/domain/errors';
-
-class LoadSurveyListSpy implements LoadSurveyList {
-  callsCount: number = 0;
-  surveys: SurveyModel[] = mockSurveyList();
-  async execute(): Promise<SurveyModel[] | undefined> {
-    this.callsCount++;
-    return this.surveys;
-  }
-}
+import {LoadSurveyListSpy} from '@/presentation/test/mock-load-survey-list';
+//import {UnexpectedError} from '@/domain/errors';
 
 type SutTypes = {
   sut: Testing.RenderAPI;
