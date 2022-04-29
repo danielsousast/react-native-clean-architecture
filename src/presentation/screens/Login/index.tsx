@@ -1,17 +1,18 @@
 /* eslint-disable curly */
 import React, {useCallback, useEffect, useState} from 'react';
-
-import {Button} from '@/presentation/components/Button';
-import {Input} from '@/presentation/components/Input';
-import {ErrorMessage} from '@/presentation/components/ErrorMessage';
-import Spinner from '@/presentation/components/Spinner';
-import LinkButton from '@/presentation/components/LinkButton';
+import {useNavigation} from '@react-navigation/native';
+import {
+  Button,
+  Input,
+  ErrorMessage,
+  Spinner,
+  LinkButton,
+} from '@/presentation/components';
 import {Validation} from '@/presentation/protocols/validation';
 import {Authentication} from '@/domain/usecases/authentication';
-import {Container} from './styles';
-import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '@/presentation/context/auth-context';
 import {AccountModel} from '@/domain/models';
+import {Container} from './styles';
 
 type LoginProps = {
   validation: Validation;

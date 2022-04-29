@@ -1,5 +1,5 @@
-import {ValidationBuilder as Builder} from '@/validation/validators/builder/validation-builder';
-import {ValidationComposite} from '@/validation/validators/composite/validation-composite';
+import {ValidationBuilder as Builder} from '@/validation/validators/builder';
+import {ValidationComposite} from '@/validation/validators/composite';
 import {makeRegisterValidation} from './register-validation-factory';
 
 describe('RegisterValidationFacotry', () => {

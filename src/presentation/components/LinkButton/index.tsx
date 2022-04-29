@@ -6,12 +6,14 @@ type LinkButtonProps = {
   onPress: () => void;
 };
 
-const LinkButton: React.FC<LinkButtonProps> = ({testID, onPress, children}) => {
+export const LinkButton: React.FC<LinkButtonProps> = ({
+  testID,
+  onPress,
+  children,
+}) => {
   return (
     <Container testID={testID} onPress={onPress}>
       <Text>{children}</Text>
     </Container>
   );
 };
-
-export default LinkButton;

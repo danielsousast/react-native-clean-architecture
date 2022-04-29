@@ -6,7 +6,7 @@ type SpinnerProps = {
   visible: boolean;
 };
 
-const Spinner: React.FC<SpinnerProps> = ({visible = false}) => {
+export const Spinner: React.FC<SpinnerProps> = ({visible = false}) => {
   return visible ? (
     <Container testID="spinner">
       <ActivityIndicator size="large" />
@@ -15,5 +15,3 @@ const Spinner: React.FC<SpinnerProps> = ({visible = false}) => {
     <></>
   );
 };
-
-export default Spinner;

@@ -2,7 +2,7 @@ import {FieldValidation} from '@/validation/protocols';
 import {EmailValidation} from '@/validation/validators/email';
 import {MinLengthValidation} from '@/validation/validators/min-length';
 import {RequiredFieldValidation} from '@/validation/validators/required-field';
-import {CompareFieldsValidation} from '../compare-fields/compare-fields-validation';
+import {CompareFieldsValidation} from '@/validation/validators/compare-fields';
 
 export class ValidationBuilder {
   private constructor(

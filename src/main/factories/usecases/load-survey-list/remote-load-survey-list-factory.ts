@@ -1,5 +1,5 @@
-import {RemoteLoadSurveyList} from '@/data/usecases/load-survey-list/remote-load-survey-list';
-import {makeAxiosHttpClient} from '@/main/factories/http/axios-http-client-factory';
+import {RemoteLoadSurveyList} from '@/data/usecases';
+import {makeAxiosHttpClient} from '@/main/factories/http';
 
 export const makeRemoteLoadSurveyList = (): RemoteLoadSurveyList => {
   const url = 'http://fordevs.herokuapp.com/api/surveys';

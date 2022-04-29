@@ -1,16 +1,18 @@
 /* eslint-disable curly */
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Button} from '@/presentation/components/Button';
-import {Input} from '@/presentation/components/Input';
-import {ErrorMessage} from '@/presentation/components/ErrorMessage';
-import Spinner from '@/presentation/components/Spinner';
-import LinkButton from '@/presentation/components/LinkButton';
+import {
+  Spinner,
+  LinkButton,
+  Input,
+  Button,
+  ErrorMessage,
+} from '@/presentation/components';
 import {Validation} from '@/presentation/protocols/validation';
 import {Registration} from '@/domain/usecases/registration';
-import {Container} from './styles';
 import {useAuth} from '@/presentation/context/auth-context';
 import {AccountModel} from '@/domain/models';
+import {Container} from './styles';
 
 type RegisterProps = {
   validation: Validation;
