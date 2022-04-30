@@ -1,5 +1,10 @@
 import faker from '@faker-js/faker';
-import {act, fireEvent, RenderAPI} from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  RenderAPI,
+  waitFor,
+} from '@testing-library/react-native';
 
 export const simulateSubmit = (sut: RenderAPI) => {
   act(() => {
@@ -13,8 +18,10 @@ export const fillIpunt = (
   testID: string,
   value: string = faker.random.word(),
 ) => {
-  const input = sut.getByTestId(testID);
-  fireEvent(input, 'onChangeText', value);
+  act(() => {
+    const input = sut.getByTestId(testID);
+    fireEvent(input, 'onChangeText', value);
+  });
 };
 
 export const testButtonIsEnabled = (sut: RenderAPI, testID: string) => {
@@ -32,7 +39,13 @@ export const testInputIsEmpty = (sut: RenderAPI, testID: string) => {
   expect(input.props.value).toBe('');
 };
 
-export const testIfIsLoading = (sut: RenderAPI) => {
+export const testIfIsLoading = async (sut: RenderAPI) => {
   const spinner = sut.getByTestId('spinner');
+  await waitFor(() => spinner);
   expect(spinner).toBeTruthy();
+};
+
+export const waitForComponent = async (sut: RenderAPI, testID: string) => {
+  const registerContainer = sut.getByTestId(testID);
+  await waitFor(() => registerContainer);
 };

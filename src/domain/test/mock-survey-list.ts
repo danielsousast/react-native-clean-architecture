@@ -6,7 +6,7 @@ export const mockSurveyList = (): SurveyModel[] => {
 };
 
 const mockSurvey = (): SurveyModel => ({
-  id: faker.random.alphaNumeric(),
+  id: faker.random.words(),
   question: faker.random.words(10),
   answers: [
     {

@@ -8,6 +8,7 @@ import {InvalidCredentialsError} from '@/domain/errors/InvalidCredentialsError';
 import * as Helper from '@/presentation/test/form-helper';
 import {renderWithAuthProvider} from '@/../jest/helpers';
 import {AccountModel} from '@/domain/models';
+
 interface SutTypes {
   sut: Testing.RenderAPI;
   validationStub: ValidationStub;
@@ -42,7 +43,6 @@ describe('Login Screen', () => {
     Helper.testInputIsEmpty(sut, 'email-input');
     Helper.testInputIsEmpty(sut, 'password-input');
   });
-
   test('should call Validation with correct email', async () => {
     const {sut, validationStub} = makeSut();
     const email = faker.internet.email();
@@ -55,6 +55,7 @@ describe('Login Screen', () => {
     const {sut, validationStub} = makeSut();
     const password = faker.internet.password();
     Helper.fillIpunt(sut, 'password-input', password);
+    await Helper.waitForComponent(sut, 'login-container');
     expect(validationStub.fieldname).toEqual('password');
     expect(validationStub.fieldvalue).toEqual(password);
   });
@@ -62,6 +63,7 @@ describe('Login Screen', () => {
   test('should present error if form is invalid', async () => {
     const {sut} = makeSut();
     Helper.fillIpunt(sut, 'password-input', faker.internet.password());
+    await Helper.waitForComponent(sut, 'login-container');
     const errorStatus = sut.getByTestId('error-message');
     expect(errorStatus.children).toHaveLength(1);
   });
@@ -89,6 +91,7 @@ describe('Login Screen', () => {
     Helper.fillIpunt(sut, 'email-input', email);
     Helper.fillIpunt(sut, 'password-input', password);
     Helper.simulateSubmit(sut);
+    await Helper.waitForComponent(sut, 'login-container');
     expect(authenticationSpy.params).toEqual({
       email,
       password,
@@ -101,6 +104,7 @@ describe('Login Screen', () => {
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
     Helper.simulateSubmit(sut);
+    await Helper.waitForComponent(sut, 'login-container');
     expect(authenticationSpy.callsCount).toEqual(1);
   });
 
@@ -108,14 +112,12 @@ describe('Login Screen', () => {
     const {sut, validationStub, authenticationSpy} = makeSut();
     validationStub.error = undefined;
     pupulateForm(sut);
-
     const error = new InvalidCredentialsError();
     jest
       .spyOn(authenticationSpy, 'auth')
       .mockReturnValue(Promise.reject(error));
     Helper.simulateSubmit(sut);
-    const errorWrapper = sut.getByTestId('error-wrapper');
-    await Testing.waitFor(() => errorWrapper);
+    await Helper.waitForComponent(sut, 'login-container');
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
@@ -126,8 +128,7 @@ describe('Login Screen', () => {
     validationStub.error = undefined;
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
-    const loginContainer = sut.getByTestId('login-container');
-    await Testing.waitFor(() => loginContainer);
+    await Helper.waitForComponent(sut, 'login-container');
     expect(setCurrentAccount).toHaveBeenCalledWith(authenticationSpy.account);
   });
 });

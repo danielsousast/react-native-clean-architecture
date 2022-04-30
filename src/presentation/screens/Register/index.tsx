@@ -74,9 +74,9 @@ export const Register: React.FC<RegisterProps> = ({
       setCurrentAccount(account as AccountModel);
     } catch (e) {
       setError((e as Error).message);
+    } finally {
       setLoading(false);
     }
-    setLoading(false);
   }
 
   function onLinkPress() {
@@ -84,7 +84,7 @@ export const Register: React.FC<RegisterProps> = ({
   }
 
   return (
-    <Container testID="login-container">
+    <Container testID="register-container">
       <Spinner visible={loading} />
       <Input
         value={name}

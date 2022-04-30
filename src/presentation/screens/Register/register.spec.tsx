@@ -87,6 +87,8 @@ describe('Register Screen', () => {
     Helper.fillIpunt(sut, 'name-input', name);
     Helper.fillIpunt(sut, 'confirm-password-input', passwordConfirmation);
     Helper.simulateSubmit(sut);
+    await Helper.waitForComponent(sut, 'register-container');
+
     expect(registrationSpy.params).toEqual({
       name,
       email,
@@ -101,6 +103,7 @@ describe('Register Screen', () => {
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
     Helper.simulateSubmit(sut);
+    await Helper.waitForComponent(sut, 'register-container');
     expect(registrationSpy.callsCount).toEqual(1);
   });
 
@@ -113,8 +116,7 @@ describe('Register Screen', () => {
       .spyOn(registrationSpy, 'execute')
       .mockReturnValue(Promise.reject(error));
     Helper.simulateSubmit(sut);
-    const errorWrapper = sut.getByTestId('error-wrapper');
-    await Testing.waitFor(() => errorWrapper);
+    await Helper.waitForComponent(sut, 'error-wrapper');
     const errorMessage = sut.getByTestId('error-message');
     expect(errorMessage.children[0]).toEqual(error.message);
   });
@@ -124,6 +126,7 @@ describe('Register Screen', () => {
     validationStub.error = faker.random.words();
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
+    await Helper.waitForComponent(sut, 'register-container');
     expect(registrationSpy.callsCount).toEqual(0);
   });
 
@@ -132,8 +135,7 @@ describe('Register Screen', () => {
     validationStub.error = undefined;
     pupulateForm(sut);
     Helper.simulateSubmit(sut);
-    const loginContainer = sut.getByTestId('login-container');
-    await Testing.waitFor(() => loginContainer);
+    await Helper.waitForComponent(sut, 'register-container');
     expect(setCurrentAccount).toHaveBeenCalledWith(registrationSpy.account);
   });
 
@@ -141,6 +143,7 @@ describe('Register Screen', () => {
     const {sut, validationStub} = makeSut();
     const name = faker.name.firstName();
     Helper.fillIpunt(sut, 'name-input', name);
+    await Helper.waitForComponent(sut, 'register-container');
     expect(validationStub.fieldname).toEqual('name');
     expect(validationStub.fieldvalue).toEqual(name);
   });
