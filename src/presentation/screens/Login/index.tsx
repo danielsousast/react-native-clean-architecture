@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable curly */
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -32,6 +33,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
       const validationError = validation?.validate(fieldname, {
         [fieldname]: fieldvalue,
       });
+      if (!validationError && error) setError(undefined);
       if (validationError) setError(validationError);
     },
     [validation],
@@ -55,6 +57,7 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
       setError((e as Error).message);
       setLoading(false);
     }
+    setLoading(false);
   }
 
   function onLinkBurttonPress() {
@@ -70,6 +73,9 @@ export const Login: React.FC<LoginProps> = ({validation, authentication}) => {
         placeholder="Email"
         marginBottom={16}
         testID="email-input"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       <Input
         value={password}

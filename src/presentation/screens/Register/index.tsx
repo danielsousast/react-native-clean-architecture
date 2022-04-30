@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable curly */
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -37,6 +38,7 @@ export const Register: React.FC<RegisterProps> = ({
       const validationError = validation?.validate(fieldname, {
         [fieldname]: fieldvalue,
       });
+      if (!validationError && error) setError(undefined);
       if (validationError) setError(validationError);
     },
     [validation],
@@ -74,10 +76,11 @@ export const Register: React.FC<RegisterProps> = ({
       setError((e as Error).message);
       setLoading(false);
     }
+    setLoading(false);
   }
 
   function onLinkPress() {
-    navigation.navigate('Register' as any);
+    navigation.navigate('Login' as any);
   }
 
   return (

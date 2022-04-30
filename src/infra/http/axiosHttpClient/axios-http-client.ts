@@ -22,7 +22,7 @@ export class AxiosHttpClient implements HttpPostClient {
   async get(params: HttpGetParams): Promise<HttpResponse> {
     let axiosResponse: AxiosResponse;
     try {
-      axiosResponse = await axios.get(params.url);
+      axiosResponse = await axios.get(params.url, {headers: params.headers});
     } catch (error) {
       ErrorLog.log('AxiosHttpClient.get', error as Error);
       axiosResponse = (error as AxiosError).response as any;

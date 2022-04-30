@@ -14,8 +14,9 @@ export const mockPostRequest = (): HttpPostParams => ({
   body: faker.random.word(),
 });
 
-export const mockGetRequest = (): HttpPostParams => ({
+export const mockGetRequest = (): HttpGetParams => ({
   url: faker.internet.url(),
+  headers: faker.random.objectElement({key: 'value'}),
 });
 
 export class HttpPostClientSpy<ResponseType>
