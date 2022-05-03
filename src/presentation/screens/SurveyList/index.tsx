@@ -2,6 +2,7 @@
 import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
 import {LinkButton, Spinner} from '@/presentation/components';
+import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
 import React, {useEffect, useState} from 'react';
 import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
@@ -42,6 +43,7 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
   return (
     <Container testID="survey-list-container">
       <Spinner visible={loading} />
+      <Header title="Surveys" />
       <Content testID="survey-list-content">
         {surveyList?.map((survey, index) => (
           <SurveyCard
