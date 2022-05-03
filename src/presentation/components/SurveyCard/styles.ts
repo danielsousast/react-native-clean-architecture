@@ -8,23 +8,25 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  color: #eee;
+  color: #ccc;
   text-align: center;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
 `;
 
 export const Button = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
-  background-color: #f16605;
   padding: 12px;
   margin-top: 32px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  border-top-width: 0.5px;
+  border-top-color: #606060;
 `;
 
 export const ButtonText = styled.Text`
-  color: #fff;
   font-size: 14px;
+  color: #f16605;
+  font-weight: 500;
 `;

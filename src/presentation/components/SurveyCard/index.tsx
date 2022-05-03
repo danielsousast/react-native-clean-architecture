@@ -6,11 +6,12 @@ type SurveyCardProps = {
     title: string;
     date: string;
   };
+  testID: string;
 };
 
-const SurveyCard: React.FC<SurveyCardProps> = ({data}) => {
+const SurveyCard: React.FC<SurveyCardProps> = ({data, testID}) => {
   return (
-    <Container>
+    <Container testID={testID}>
       <Title testID="survey-card-title">{data?.title}</Title>
       <Button>
         <ButtonText>Ver resultado</ButtonText>

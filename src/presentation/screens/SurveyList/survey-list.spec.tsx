@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Testing from '@testing-library/react-native';
+import * as Helper from '@/presentation/test/form-helper';
 import SurveyList from '.';
 import {LoadSurveyListSpy} from '@/presentation/test/mock-load-survey-list';
 //import {UnexpectedError} from '@/domain/errors';
@@ -27,9 +28,9 @@ describe('SurveyListScreen', () => {
 
   test('should render List on success', async () => {
     const {sut} = makeSut();
-    const surveyListContent = sut.getByTestId('survey-list-content');
-    await Testing.waitFor(() => surveyListContent);
-    expect(surveyListContent.children).toHaveLength(3);
+    await Helper.waitForComponent(sut, 'survey-list-container');
+    const surveyItem = sut.getByTestId('survey-item-2');
+    expect(surveyItem).toBeTruthy();
   });
 
   /*   test('should render errorMessage on fails', async () => {

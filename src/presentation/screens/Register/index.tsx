@@ -32,6 +32,9 @@ export const Register: React.FC<RegisterProps> = ({
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
+  const [registrationError, setRegistrationError] = React.useState<
+    string | undefined
+  >();
 
   const validate = useCallback(
     (fieldname: string, fieldvalue: string) => {
@@ -41,7 +44,7 @@ export const Register: React.FC<RegisterProps> = ({
       if (!validationError && error) setError(undefined);
       if (validationError) setError(validationError);
     },
-    [validation],
+    [validation, error],
   );
 
   useEffect(() => {
@@ -73,7 +76,7 @@ export const Register: React.FC<RegisterProps> = ({
       });
       setCurrentAccount(account as AccountModel);
     } catch (e) {
-      setError((e as Error).message);
+      setRegistrationError((e as Error).message);
     } finally {
       setLoading(false);
     }
@@ -126,7 +129,7 @@ export const Register: React.FC<RegisterProps> = ({
       <LinkButton testID="login-button" onPress={onLinkPress}>
         Fazer login
       </LinkButton>
-      <ErrorMessage error={error} />
+      <ErrorMessage error={registrationError || error} />
     </Container>
   );
 };

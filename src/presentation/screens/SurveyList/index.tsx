@@ -43,18 +43,18 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
     <Container testID="survey-list-container">
       <Spinner visible={loading} />
       <Content testID="survey-list-content">
-        {surveyList &&
-          surveyList?.map(survey => (
-            <SurveyCard
-              key={survey.id}
-              data={{
-                title: 'Qual o meu framework favorito?',
-                date: '12/12/2022',
-              }}
-            />
-          ))}
-        {error && renderError()}
+        {surveyList?.map((survey, index) => (
+          <SurveyCard
+            testID={`survey-item-${index}`}
+            key={survey.id}
+            data={{
+              title: survey?.question,
+              date: '12/12/2022',
+            }}
+          />
+        ))}
       </Content>
+      {error && renderError()}
     </Container>
   );
 };

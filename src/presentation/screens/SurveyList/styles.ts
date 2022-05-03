@@ -6,7 +6,11 @@ export const Container = styled.SafeAreaView`
   background-color: #2a2931;
 `;
 
-export const Content = styled.View`
+export const Content = styled.ScrollView.attrs({
+  contentContainerStyle: {
+    paddingVertical: 24,
+  },
+})`
   flex: 1;
   padding: 16px;
 `;
