@@ -4,14 +4,14 @@ import React, {createContext, useContext, useEffect, useState} from 'react';
 
 interface ContextData {
   account?: AccountModel;
-  setCurrentAccount: (account: AccountModel) => void;
+  setCurrentAccount: (account?: AccountModel) => void;
   getCurrentAccount: () => Promise<AccountModel>;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
 
 type AuthProviderProps = {
-  setCurrentAccount: (account: AccountModel) => void;
+  setCurrentAccount: (account?: AccountModel) => void;
   getCurrentAccount: () => Promise<AccountModel>;
 };
 
