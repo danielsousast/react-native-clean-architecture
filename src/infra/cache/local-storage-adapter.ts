@@ -3,7 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export class LocalStorageAdapter implements Storage {
   set(key: string, value: any): void {
-    AsyncStorage.setItem(key, JSON.stringify(value));
+    if(value) {
+      AsyncStorage.setItem(key, JSON.stringify(value));
+    } else {
+      AsyncStorage.removeItem(key);
+    }
   }
 
   async get(key: string): Promise<any> {
