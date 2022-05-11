@@ -1,5 +1,4 @@
 import { AccessDeniedError } from "@/domain/errors";
-import { useCallback } from "react";
 import { useAuth } from "../context/auth-context"
 
 type CallBackType = (error: Error) => void;

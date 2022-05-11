@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { AccessDeniedError } from '@/domain/errors';
 import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
 import {LinkButton, Spinner} from '@/presentation/components';
 import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
-import { useAuth } from '@/presentation/context/auth-context';
 import { useErrorHandler } from '@/presentation/hooks/useErrorHandler';
 import React, {useEffect, useState} from 'react';
 import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
