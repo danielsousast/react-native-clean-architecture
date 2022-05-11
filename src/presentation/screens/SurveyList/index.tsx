@@ -1,9 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { AccessDeniedError } from '@/domain/errors';
 import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
 import {LinkButton, Spinner} from '@/presentation/components';
 import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
+import { useAuth } from '@/presentation/context/auth-context';
 import React, {useEffect, useState} from 'react';
 import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
 
@@ -12,6 +14,7 @@ type SurveyList = {
 };
 
 const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
+  const {setCurrentAccount} = useAuth();
   const [loading, setLoading] = useState(false);
   const [surveyList, setSurveyList] = useState<SurveyModel[]>();
   const [error, setError] = useState<Error>(null as unknown as Error);
@@ -22,7 +25,12 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
       const surveyListResponse = await loadSurveyList.execute();
       setSurveyList(surveyListResponse);
     } catch (err) {
-      setError(err as Error);
+      console.log('error', err)
+      if(err instanceof AccessDeniedError) {
+        setCurrentAccount(undefined);
+      }else {
+        setError(err as Error);
+      }
     }
     setLoading(false);
   }

@@ -3,18 +3,24 @@ import * as Testing from '@testing-library/react-native';
 import * as Helper from '@/presentation/test/form-helper';
 import SurveyList from '.';
 import {LoadSurveyListSpy} from '@/presentation/test/mock-load-survey-list';
+import { AccessDeniedError } from '@/domain/errors';
+import { renderWithAuthProvider } from '@/../jest/helpers';
+import { AccountModel } from '@/domain/models';
 //import {UnexpectedError} from '@/domain/errors';
 
 type SutTypes = {
   sut: Testing.RenderAPI;
   loadSurveyListSpy: LoadSurveyListSpy;
+  setCurrentAccountMock: (account: AccountModel) => void;
 };
 
 const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
-  const sut = Testing.render(<SurveyList loadSurveyList={loadSurveyListSpy} />);
+  const setCurrentAccountMock = jest.fn();
+  const sut = renderWithAuthProvider({component: <SurveyList loadSurveyList={loadSurveyListSpy} />, setCurrentAccount:setCurrentAccountMock });
   return {
     sut,
     loadSurveyListSpy,
+    setCurrentAccountMock
   };
 };
 
@@ -32,7 +38,14 @@ describe('SurveyListScreen', () => {
     const surveyItem = sut.getByTestId('survey-item-2');
     expect(surveyItem).toBeTruthy();
   });
-
+/*  
+  test('should logout on AccessDeniedError', async () => {
+    const {sut, loadSurveyListSpy,setCurrentAccountMock} = makeSut();
+    jest.spyOn(loadSurveyListSpy, 'execute').mockRejectedValueOnce(new AccessDeniedError());
+    await Helper.waitForComponent(sut, 'survey-list-container');
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
+  });
+*/
   /*   test('should render errorMessage on fails', async () => {
     const loadSurveyListSpy = new LoadSurveyListSpy();
     const {sut} = makeSut(loadSurveyListSpy);
