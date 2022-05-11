@@ -5,17 +5,19 @@ import React from 'react';
 
 type params = {
   component: JSX.Element;
-  setCurrentAccount: any;
+  setCurrentAccount?: any;
+  getCurrentAccount?: any;
 };
 
 export const renderWithAuthProvider = ({
   component,
   setCurrentAccount,
+  getCurrentAccount
 }: params) => {
   return Testing.render(
     <AuthProvider
       setCurrentAccount={setCurrentAccount}
-      getCurrentAccount={jest.fn()}>
+      getCurrentAccount={getCurrentAccount}>
       <NavigationContainer>{component}</NavigationContainer>
     </AuthProvider>,
   );

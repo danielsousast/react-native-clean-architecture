@@ -13,6 +13,12 @@ export const HeaderTitle = styled.Text`
   font-weight: 500;
 `;
 
+export const UserName = styled.Text`
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
 export const SignOutButton = styled.TouchableOpacity`
 justify-content: center;
 align-items: center;
