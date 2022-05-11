@@ -6,6 +6,7 @@ import {LinkButton, Spinner} from '@/presentation/components';
 import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
 import { useAuth } from '@/presentation/context/auth-context';
+import { useErrorHandler } from '@/presentation/hooks/useErrorHandler';
 import React, {useEffect, useState} from 'react';
 import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
 
@@ -14,7 +15,7 @@ type SurveyList = {
 };
 
 const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
-  const {setCurrentAccount} = useAuth();
+  const handleError = useErrorHandler((error) => setError(error));
   const [loading, setLoading] = useState(false);
   const [surveyList, setSurveyList] = useState<SurveyModel[]>();
   const [error, setError] = useState<Error>(null as unknown as Error);
@@ -25,12 +26,7 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
       const surveyListResponse = await loadSurveyList.execute();
       setSurveyList(surveyListResponse);
     } catch (err) {
-      console.log('error', err)
-      if(err instanceof AccessDeniedError) {
-        setCurrentAccount(undefined);
-      }else {
-        setError(err as Error);
-      }
+      handleError(err as Error)
     }
     setLoading(false);
   }
