@@ -13,20 +13,16 @@ export const WelcomeWrapper = styled.View`
 `;
 
 export const HeaderTitle = styled.Text`
-  color: #fff;
   font-size: 16px;
   font-weight: 500;
   margin-top: 32px;
 `;
 
-export const WelcomeText = styled.Text`
-  color: #fff;
-`;
+export const WelcomeText = styled.Text``;
 
 export const UserWrapper = styled.View``;
 
 export const UserName = styled.Text`
-  color: #fff;
   font-size: 18px;
   font-weight: 500;
 `;

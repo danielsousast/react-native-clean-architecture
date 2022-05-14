@@ -1,9 +1,11 @@
+import {colors} from '@/presentation/global/colors';
 import styled from 'styled-components/native';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
   padding: 16px;
   padding-top: 40px;
+  background-color: ${colors.background};
 `;
 
 export const Title = styled.Text`

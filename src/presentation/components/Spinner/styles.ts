@@ -1,3 +1,4 @@
+import {colors} from '@/presentation/global/colors';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -6,7 +7,7 @@ export const Container = styled.View`
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: #2a2931;
+  background-color: ${colors.background};
   position: absolute;
   z-index: 9999;
 `;

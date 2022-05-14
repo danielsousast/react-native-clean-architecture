@@ -1,3 +1,4 @@
+import {colors} from '@/presentation/global/colors';
 import {TextInput as RNTextInput} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
@@ -9,7 +10,8 @@ export const Container = styled.View<ContainerProps>`
   width: 100%;
   height: 44px;
   justify-content: center;
-  background-color: #3e3c47;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.border};
   border-radius: 4px;
   ${({error}) =>
     error &&
@@ -19,9 +21,9 @@ export const Container = styled.View<ContainerProps>`
 `;
 
 export const TextInput = styled(RNTextInput).attrs({
-  placeholderTextColor: '#eee',
+  placeholderTextColor: colors.lightText,
 })`
   width: 100%;
-  color: #fff;
+  color: ${colors.text};
   padding: 0 16px;
 `;

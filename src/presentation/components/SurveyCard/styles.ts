@@ -2,13 +2,12 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   border-radius: 8px;
-  background-color: #3e3c47;
+  background-color: #fff;
   padding-top: 32px;
   margin-bottom: 16px;
 `;
 
 export const Title = styled.Text`
-  color: #ccc;
   text-align: center;
   font-size: 14px;
   font-weight: 600;
@@ -22,7 +21,7 @@ export const Button = styled.TouchableOpacity`
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   border-top-width: 0.5px;
-  border-top-color: #606060;
+  border-top-color: #eee;
 `;
 
 export const ButtonText = styled.Text`

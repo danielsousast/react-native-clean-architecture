@@ -1,3 +1,4 @@
+import {colors} from '@/presentation/global/colors';
 import styled from 'styled-components/native';
 
 export const Container = styled.TouchableOpacity`
@@ -9,5 +10,5 @@ export const Container = styled.TouchableOpacity`
 
 export const Text = styled.Text`
   font-weight: bold;
-  color: #f16605;
+  color: ${colors.lightText};
 `;
