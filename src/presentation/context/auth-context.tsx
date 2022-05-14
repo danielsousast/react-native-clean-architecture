@@ -1,11 +1,18 @@
 /* eslint-disable curly */
 import {AccountModel} from '@/domain/models';
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface ContextData {
   account?: AccountModel;
   setCurrentAccount: (account?: AccountModel) => void;
   getCurrentAccount: () => Promise<AccountModel>;
+  signOut: () => void;
 }
 
 export const AuthContext = createContext<ContextData>({} as ContextData);
@@ -30,11 +37,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       }
     }
     loadAccount();
-  }, [account?.accessToken, getCurrentAccount]);
+  }, [account?.accessToken, getCurrentAccount, setCurrentAccount]);
+
+  const signOut = useCallback(() => {
+    setCurrentAccount(undefined);
+    setAccount(undefined);
+  }, [setCurrentAccount]);
+
+  const handleSetCurrentAcount = useCallback(
+    (param?: AccountModel) => {
+      setCurrentAccount(param);
+      setAccount(param);
+    },
+    [setCurrentAccount],
+  );
 
   return (
     <AuthContext.Provider
-      value={{setCurrentAccount, getCurrentAccount, account}}>
+      value={{
+        setCurrentAccount: handleSetCurrentAcount,
+        getCurrentAccount,
+        account,
+        signOut,
+      }}>
       {children}
     </AuthContext.Provider>
   );

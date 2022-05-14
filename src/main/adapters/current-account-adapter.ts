@@ -1,8 +1,7 @@
-import {UnexpectedError} from '@/domain/errors';
 import {AccountModel} from '@/domain/models';
 import {makeLocalStorageAdapter} from '@/main/factories/usecases';
 
-export const setCurrentAccountAdapter = (account: AccountModel): void => {
+export const setCurrentAccountAdapter = (account?: AccountModel): void => {
   makeLocalStorageAdapter().set('account', account);
 };
 

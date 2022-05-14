@@ -6,6 +6,7 @@ import {useAuth} from '@/presentation/context/auth-context';
 
 export const Navigator: React.FC = () => {
   const {account} = useAuth();
+
   return (
     <NavigationContainer>
       {account?.accessToken ? <AppStack /> : <AuthStack />}
