@@ -1,6 +1,9 @@
-import {Button} from '@/presentation/components';
+//import {SurveyResultModel} from '@/domain/models';
+import {LoadSurveyResult} from '@/domain/usecases';
+import {Button, Spinner} from '@/presentation/components';
+import ErrorComponent from '@/presentation/components/ErrorComponent';
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback} from 'react';
+import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {
   AnswerTitle,
   AnswerWrapper,
@@ -10,12 +13,27 @@ import {
   AnswerLabel,
 } from './styles';
 
-const SurveyResult: React.FC = () => {
+type Props = {
+  loadSurveyResult: LoadSurveyResult;
+};
+
+const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
   const {goBack} = useNavigation();
+  const [loading] = useState(false);
+  const [error] = useState<Error>(null as unknown as Error);
+  //const [surveyResult, setSurveyResult] = useState<SurveyResultModel>();
 
   const handleOnBackPress = useCallback(() => {
     goBack();
   }, [goBack]);
+
+  useEffect(() => {
+    loadSurveyResult.execute();
+  }, [loadSurveyResult]);
+
+  function renderError() {
+    return <ErrorComponent message={error?.message} onPress={() => {}} />;
+  }
 
   const renderItem = () => {
     return (
@@ -27,11 +45,19 @@ const SurveyResult: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Title>Qual seu framework favorito?</Title>
-      <List data={['1', '2']} renderItem={renderItem} />
-      <Button title="Votlar" onPress={handleOnBackPress} />
-    </Container>
+    <Fragment>
+      <Spinner visible={loading} />
+      <Container testID="survey-result-container">
+        {error && renderError()}
+        {!error && (
+          <Fragment>
+            <Title>Qual seu framework favorito?</Title>
+            <List data={['1', '2']} renderItem={renderItem} />
+          </Fragment>
+        )}
+        <Button title="Votlar" onPress={handleOnBackPress} />
+      </Container>
+    </Fragment>
   );
 };
 

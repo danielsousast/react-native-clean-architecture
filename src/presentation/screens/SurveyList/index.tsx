@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {SurveyModel} from '@/domain/models';
 import {LoadSurveyList} from '@/domain/usecases';
-import {LinkButton, Spinner} from '@/presentation/components';
+import {Spinner} from '@/presentation/components';
+import ErrorComponent from '@/presentation/components/ErrorComponent';
 import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
 import {useErrorHandler} from '@/presentation/hooks/useErrorHandler';
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
+import {Container, Content} from './styles';
 
 type SurveyList = {
   loadSurveyList: LoadSurveyList;
@@ -37,10 +38,7 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
 
   function renderError() {
     return (
-      <ErrorWrap>
-        <ErrorTitle testID="error-title">{error?.message}</ErrorTitle>
-        <LinkButton onPress={handleLoadSurveyList}>Tentar novamente</LinkButton>
-      </ErrorWrap>
+      <ErrorComponent message={error?.message} onPress={handleLoadSurveyList} />
     );
   }
 

@@ -1,4 +1,8 @@
-import { EmailValidation, MinLengthValidation, RequiredFieldValidation } from '@/validation/validators';
+import {
+  EmailValidation,
+  MinLengthValidation,
+  RequiredFieldValidation,
+} from '@/validation/validators';
 import {ValidationComposite} from '@/validation/validators/composite';
 import {makeLoginValidation} from './login-validation-factory';
 

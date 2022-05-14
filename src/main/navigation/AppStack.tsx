@@ -1,7 +1,9 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {MakeSurveyListScreen} from '@/main/factories/screens';
-import SurveyResult from '@/presentation/screens/SurveyResult';
+import {
+  SurveyListScreenFactory,
+  SurveyResultScreenFactory,
+} from '@/main/factories/screens';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -16,8 +18,8 @@ export const AppStack: React.FC<AppStackProps> = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Screen name="SurveyList" component={MakeSurveyListScreen} />
-      <Screen name="SurveyResult" component={SurveyResult} />
+      <Screen name="SurveyList" component={SurveyListScreenFactory} />
+      <Screen name="SurveyResult" component={SurveyResultScreenFactory} />
     </Navigator>
   );
 };
