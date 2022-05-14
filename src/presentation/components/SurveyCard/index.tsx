@@ -7,13 +7,14 @@ type SurveyCardProps = {
     date: string;
   };
   testID: string;
+  onPress: () => void;
 };
 
-const SurveyCard: React.FC<SurveyCardProps> = ({data, testID}) => {
+const SurveyCard: React.FC<SurveyCardProps> = ({data, onPress, testID}) => {
   return (
     <Container testID={testID}>
       <Title testID="survey-card-title">{data?.title}</Title>
-      <Button>
+      <Button onPress={onPress}>
         <ButtonText>Ver resultado</ButtonText>
       </Button>
     </Container>

@@ -5,7 +5,8 @@ import {LinkButton, Spinner} from '@/presentation/components';
 import Header from '@/presentation/components/Header';
 import SurveyCard from '@/presentation/components/SurveyCard';
 import {useErrorHandler} from '@/presentation/hooks/useErrorHandler';
-import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Container, Content, ErrorTitle, ErrorWrap} from './styles';
 
 type SurveyList = {
@@ -13,12 +14,13 @@ type SurveyList = {
 };
 
 const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
+  const {navigate} = useNavigation();
   const handleError = useErrorHandler(error => setError(error));
   const [loading, setLoading] = useState(false);
   const [surveyList, setSurveyList] = useState<SurveyModel[]>();
   const [error, setError] = useState<Error>(null as unknown as Error);
 
-  async function load() {
+  async function handleLoadSurveyList() {
     setLoading(true);
     try {
       const surveyListResponse = await loadSurveyList.execute();
@@ -30,17 +32,21 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
   }
 
   useEffect(() => {
-    load();
+    handleLoadSurveyList();
   }, []);
 
   function renderError() {
     return (
       <ErrorWrap>
         <ErrorTitle testID="error-title">{error?.message}</ErrorTitle>
-        <LinkButton onPress={load}>Tentar novamente</LinkButton>
+        <LinkButton onPress={handleLoadSurveyList}>Tentar novamente</LinkButton>
       </ErrorWrap>
     );
   }
+
+  const handleSurveyPress = useCallback(() => {
+    navigate('SurveyResult' as any);
+  }, []);
 
   return (
     <Container testID="survey-list-container">
@@ -55,6 +61,7 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
               title: survey?.question,
               date: '12/12/2022',
             }}
+            onPress={handleSurveyPress}
           />
         ))}
       </Content>
