@@ -22,8 +22,9 @@ const makeSut = (): SutTypes => {
 };
 
 describe('SurveyResult Screen', () => {
-  test('should present inital state', () => {
+  test('should present inital state', async () => {
     const {sut} = makeSut();
+    await waitForComponent(sut, 'survey-result-container');
     const error = sut.queryByTestId('error-wrapper');
     const spinner = sut.queryByTestId('spinner');
     expect(error).toBeFalsy();
@@ -34,5 +35,25 @@ describe('SurveyResult Screen', () => {
     const {sut, laodSurveyResultSpy} = makeSut();
     await waitForComponent(sut, 'survey-result-container');
     expect(laodSurveyResultSpy.callsCount).toBe(1);
+  });
+
+  test('should present SurveyResult data on success', async () => {
+    const {sut, laodSurveyResultSpy} = makeSut();
+    await waitForComponent(sut, 'survey-result-container');
+    expect(sut.getByTestId('question').children[0]).toBe(
+      laodSurveyResultSpy.surveyResult.question,
+    );
+    expect(sut.getByTestId('answer-0').children[0]).toBe(
+      laodSurveyResultSpy.surveyResult.answers[0].answer,
+    );
+    expect(sut.getByTestId('percent-0').children[0]).toBe(
+      laodSurveyResultSpy.surveyResult.answers[0].percent,
+    );
+    expect(sut.getByTestId('answer-1').children[0]).toBe(
+      laodSurveyResultSpy.surveyResult.answers[1].answer,
+    );
+    expect(sut.getByTestId('percent-1').children[0]).toBe(
+      laodSurveyResultSpy.surveyResult.answers[1].percent,
+    );
   });
 });

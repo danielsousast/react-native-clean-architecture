@@ -9,6 +9,6 @@ export type SurveyResultAnswer = {
   image?: string;
   answer: string;
   count: number;
-  percent: number;
+  percent: string;
   isCurrentAccountAnswer: boolean;
 };

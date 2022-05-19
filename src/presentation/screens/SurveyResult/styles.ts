@@ -15,7 +15,7 @@ export const Title = styled.Text`
   margin-top: 8px;
 `;
 
-export const List = styled.FlatList``;
+export const List = styled.ScrollView``;
 
 export const AnswerWrapper = styled.TouchableOpacity`
   background-color: #fff;
