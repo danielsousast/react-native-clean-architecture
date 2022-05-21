@@ -42,8 +42,11 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
     );
   }
 
-  const handleSurveyPress = useCallback(() => {
-    navigate('SurveyResult' as any);
+  const handleSurveyPress = useCallback((surveyId: string) => {
+    //@ts-ignore
+    navigate('SurveyResult', {
+      surveyId,
+    });
   }, []);
 
   return (
@@ -59,7 +62,7 @@ const SurveyListScreen: React.FC<SurveyList> = ({loadSurveyList}) => {
               title: survey?.question,
               date: '12/12/2022',
             }}
-            onPress={handleSurveyPress}
+            onPress={() => handleSurveyPress(survey.id)}
           />
         ))}
       </Content>

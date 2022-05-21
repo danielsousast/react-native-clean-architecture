@@ -11,7 +11,9 @@ const ErrorComponent: React.FC<Props> = ({onPress, message}) => {
   return (
     <ErrorWrap testID="error-wrapper">
       <ErrorTitle testID="error-title">{message}</ErrorTitle>
-      <LinkButton onPress={onPress}>Tentar novamente</LinkButton>
+      <LinkButton onPress={onPress} testID="button-reload">
+        Tentar novamente
+      </LinkButton>
     </ErrorWrap>
   );
 };

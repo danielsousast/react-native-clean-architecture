@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {SurveyResultModel} from '@/domain/models';
 import {LoadSurveyResult} from '@/domain/usecases';
 import {Button, Spinner} from '@/presentation/components';
 import ErrorComponent from '@/presentation/components/ErrorComponent';
+import {useErrorHandler} from '@/presentation/hooks/useErrorHandler';
 import {useNavigation} from '@react-navigation/native';
 import React, {Fragment, useCallback, useEffect, useState} from 'react';
 import {
@@ -20,21 +22,19 @@ type Props = {
 const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
   const {goBack} = useNavigation();
   const [loading] = useState(false);
-  const [error] = useState<Error>(null as unknown as Error);
   const [surveyResult, setSurveyResult] = useState<SurveyResultModel>();
-
-  const handleOnBackPress = useCallback(() => {
-    goBack();
-  }, [goBack]);
+  const handleError = useErrorHandler(error => setError(error));
+  const [error, setError] = useState<Error>(null as unknown as Error);
 
   const handleLoadSurveyResult = useCallback(async () => {
     try {
       const response = await loadSurveyResult.execute();
-
       if (response) {
         setSurveyResult(response);
       }
-    } catch (err) {}
+    } catch (err) {
+      handleError(err as Error);
+    }
   }, [loadSurveyResult]);
 
   useEffect(() => {
@@ -42,7 +42,12 @@ const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
   }, [handleLoadSurveyResult]);
 
   function renderError() {
-    return <ErrorComponent message={error?.message} onPress={() => {}} />;
+    return (
+      <ErrorComponent
+        message={error?.message}
+        onPress={handleLoadSurveyResult}
+      />
+    );
   }
 
   return (
@@ -67,7 +72,7 @@ const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
             </List>
           </Fragment>
         )}
-        <Button title="Votlar" onPress={handleOnBackPress} />
+        <Button title="Votlar" onPress={goBack} />
       </Container>
     </Fragment>
   );

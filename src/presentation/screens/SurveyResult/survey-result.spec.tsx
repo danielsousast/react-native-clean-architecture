@@ -2,17 +2,17 @@ import React from 'react';
 
 import {renderWithAuthProvider} from '@/../jest/helpers';
 import SurveyResult from '.';
-import {RenderAPI} from '@testing-library/react-native';
+import {fireEvent, RenderAPI} from '@testing-library/react-native';
 import {LoadSurveyResultSpy} from '@/presentation/test/mock-load-survey-result';
 import {waitForComponent} from '@/presentation/test/form-helper';
+import {UnexpectedError} from '@/domain/errors';
 
 type SutTypes = {
   sut: RenderAPI;
   laodSurveyResultSpy: LoadSurveyResultSpy;
 };
 
-const makeSut = (): SutTypes => {
-  const laodSurveyResultSpy = new LoadSurveyResultSpy();
+const makeSut = (laodSurveyResultSpy = new LoadSurveyResultSpy()): SutTypes => {
   const sut = renderWithAuthProvider({
     component: <SurveyResult loadSurveyResult={laodSurveyResultSpy} />,
     setCurrentAccount: jest.fn(),
@@ -55,5 +55,27 @@ describe('SurveyResult Screen', () => {
     expect(sut.getByTestId('percent-1').children[0]).toBe(
       laodSurveyResultSpy.surveyResult.answers[1].percent,
     );
+  });
+
+  test('should render error on UnexpectedError', async () => {
+    const laodSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(laodSurveyResultSpy, 'execute').mockRejectedValueOnce(error);
+    const {sut} = makeSut(laodSurveyResultSpy);
+    await waitForComponent(sut, 'survey-result-container');
+    const errorMessage = sut.getByTestId('error-title');
+    expect(errorMessage.children[0]).toBe(error.message);
+  });
+
+  test('should call error LoadSurveyResult on reload', async () => {
+    const laodSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(laodSurveyResultSpy, 'execute').mockRejectedValueOnce(error);
+    const {sut} = makeSut(laodSurveyResultSpy);
+    await waitForComponent(sut, 'survey-result-container');
+    const buttonReload = sut.getByTestId('button-reload');
+    fireEvent.press(buttonReload);
+    await waitForComponent(sut, 'survey-result-container');
+    expect(laodSurveyResultSpy.callsCount).toBe(1);
   });
 });

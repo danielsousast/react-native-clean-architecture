@@ -5,7 +5,6 @@ import SurveyList from '.';
 import {LoadSurveyListSpy} from '@/presentation/test/mock-load-survey-list';
 import {renderWithAuthProvider} from '@/../jest/helpers';
 import {AccountModel} from '@/domain/models';
-//import {UnexpectedError} from '@/domain/errors';
 
 type SutTypes = {
   sut: Testing.RenderAPI;
@@ -40,15 +39,16 @@ describe('SurveyListScreen', () => {
     const surveyItem = sut.getByTestId('survey-item-2');
     expect(surveyItem).toBeTruthy();
   });
-  /*  
-  test('should logout on AccessDeniedError', async () => {
-    const {sut, loadSurveyListSpy,setCurrentAccountMock} = makeSut();
-    jest.spyOn(loadSurveyListSpy, 'execute').mockRejectedValueOnce(new AccessDeniedError());
+
+  /*  test('should logout on AccessDeniedError', async () => {
+    const {sut, loadSurveyListSpy, setCurrentAccountMock} = makeSut();
+    jest
+      .spyOn(loadSurveyListSpy, 'execute')
+      .mockRejectedValueOnce(new AccessDeniedError());
     await Helper.waitForComponent(sut, 'survey-list-container');
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
   });
-*/
-  /*   test('should render errorMessage on fails', async () => {
+   test('should render errorMessage on fails', async () => {
     const loadSurveyListSpy = new LoadSurveyListSpy();
     const {sut} = makeSut(loadSurveyListSpy);
     const error = new UnexpectedError();

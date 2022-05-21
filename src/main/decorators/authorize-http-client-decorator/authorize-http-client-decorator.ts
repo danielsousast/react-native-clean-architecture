@@ -1,18 +1,14 @@
 import {GetStorage} from '@/data/protocols/cache/get-storage';
-import {
-  HttpGetClient,
-  HttpGetParams,
-  HttpResponse,
-} from '@/data/protocols/http';
+import {HttpClient, HttpRequest, HttpResponse} from '@/data/protocols/http';
 import {AccountModel} from '@/domain/models';
 
-export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
+export class AuthorizeHttpClientDecorator implements HttpClient {
   constructor(
     private readonly getStorage: GetStorage,
-    private readonly httpGetClient: HttpGetClient,
+    private readonly httpGetClient: HttpClient,
   ) {}
 
-  async get(params: HttpGetParams): Promise<HttpResponse> {
+  async request(params: HttpRequest): Promise<HttpResponse> {
     const account: AccountModel = await this.getStorage.get('account');
     if (account?.accessToken) {
       Object.assign(params, {
@@ -21,7 +17,7 @@ export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
         }),
       });
     }
-    const response = await this.httpGetClient.get(params);
+    const response = await this.httpGetClient.request(params);
     return response;
   }
 }
