@@ -1,9 +1,11 @@
 import {SurveyResultModel} from '@/domain/models';
 
-type SaveResultParams = {
+export type SaveSurveyResultParams = {
   answer: string;
 };
 
 export interface SaveSurveyResult {
-  execute: (params: SaveResultParams) => Promise<SurveyResultModel | undefined>;
+  execute: (
+    params: SaveSurveyResultParams,
+  ) => Promise<SurveyResultModel | undefined>;
 }
