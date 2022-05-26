@@ -1,6 +1,9 @@
 import React from 'react';
 import SurveyResult from '@/presentation/screens/SurveyResult';
-import {makeRemoteLoadSurveyResult} from '../../usecases';
+import {
+  makeRemoteLoadSurveyResult,
+  makeRemoteSaveSurveyResult,
+} from '../../usecases';
 import {useRoute} from '@react-navigation/native';
 
 interface RouteParams {
@@ -12,6 +15,7 @@ export const SurveyResultScreenFactory: React.FC = () => {
   const routeParams = route.params as RouteParams;
   return (
     <SurveyResult
+      saveSurveyResult={makeRemoteSaveSurveyResult(routeParams?.surveyId)}
       loadSurveyResult={makeRemoteLoadSurveyResult(routeParams?.surveyId)}
     />
   );

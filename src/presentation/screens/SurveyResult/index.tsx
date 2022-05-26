@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {SurveyResultModel} from '@/domain/models';
-import {LoadSurveyResult} from '@/domain/usecases';
+import {LoadSurveyResult, SaveSurveyResult} from '@/domain/usecases';
 import {Button, Spinner} from '@/presentation/components';
 import ErrorComponent from '@/presentation/components/ErrorComponent';
 import {useErrorHandler} from '@/presentation/hooks/useErrorHandler';
@@ -17,9 +17,13 @@ import {
 
 type Props = {
   loadSurveyResult: LoadSurveyResult;
+  saveSurveyResult: SaveSurveyResult;
 };
 
-const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
+const SurveyResult: React.FC<Props> = ({
+  loadSurveyResult,
+  saveSurveyResult,
+}) => {
   const {goBack} = useNavigation();
   const [loading] = useState(false);
   const [surveyResult, setSurveyResult] = useState<SurveyResultModel>();
@@ -50,6 +54,10 @@ const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
     );
   }
 
+  const handleAnswer = async (answer: string) => {
+    await saveSurveyResult.execute({answer});
+  };
+
   return (
     <Fragment>
       <Spinner visible={loading} />
@@ -60,7 +68,10 @@ const SurveyResult: React.FC<Props> = ({loadSurveyResult}) => {
             <Title testID="question">{surveyResult?.question}</Title>
             <List testID="answers">
               {surveyResult?.answers.map((answer, index) => (
-                <AnswerWrapper key={answer.answer}>
+                <AnswerWrapper
+                  key={answer.answer}
+                  onPress={() => handleAnswer(answer.answer)}
+                  testID="answer-button">
                   <AnswerTitle testID={`answer-${index}`}>
                     {answer.answer}
                   </AnswerTitle>
